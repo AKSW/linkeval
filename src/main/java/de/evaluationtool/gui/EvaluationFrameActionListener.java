@@ -314,7 +314,8 @@ class EvaluationFrameActionListener implements ActionListener
 		if(f.isDirectory())	{formats = ReferenceFormats.REFERENCE_FORMATS.directoryFormats;}
 		else				{formats = ReferenceFormats.REFERENCE_FORMATS.extensionToFormats.get(f.getName().substring(f.getName().lastIndexOf(".")+1));}
 
-		if(formats.isEmpty()) {throw new Exception("No format available that can read this.");}
+		if(formats==null||formats.isEmpty()) {throw new Exception
+			("No format available that can read files with the "+f.getName().substring(f.getName().lastIndexOf(".")+1)+" extension.");}
 		if(formats.size()==1)	{format = formats.iterator().next();}
 		else 					{format = formatChooser(formats);}
 

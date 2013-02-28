@@ -83,7 +83,7 @@ import fr.inrialpes.exmo.align.parser.AlignmentParser;
 public class EvaluationFrame extends JFrame
 {
 	double fScoreBeta = 0.5;
-	File defaultDirectory = new File("input/vortrag");
+	File defaultDirectory = new File(".");
 	static final boolean shuffle = true;
 	static final int CHART_WIDTH = 1024;
 	static final int CHART_HEIGHT = 768;

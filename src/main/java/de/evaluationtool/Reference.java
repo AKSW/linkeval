@@ -9,4 +9,4 @@ public class Reference
 {
 	public Set<Link> links;
 	public String property;
-} 
+}
