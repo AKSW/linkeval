@@ -1,0 +1,17 @@
+prefix	property	endpoint	hasGeoCoordinates	description
+http://dbpedia.org/resource/	rdfs:label	http://dbpedia.org/sparql	true	DBpedia
+http://bio2rdf.org/mesh:	dc:title	http://mesh.bio2rdf.org/sparql	false	MeSH (Pubmed)
+http://data.linkedct.org/resource/location/	linkedct:location_facility ?xxx. ?xxx linkedct:facility_address ?yyy. ?yyy linkedct:address_country ?zzz. ?zzz rdfs:label	http://lgd.aksw.org:8900/sparql	false	LinkedCT Location
+http://data.linkedct.org/resource/condition/	rdfs:label	http://lgd.aksw.org:8900/sparql	false	LinkedCT Condition
+http://data.linkedct.org/resource/country/	linkedct:country_country_name	http://lgd.aksw.org:8900/sparql	false	LinkedCT Country
+#old#http://data.linkedct.org/resource/condition/	linkedct:condition_name	http://db0.aksw.org:8895/sparql	false	LinkedCT Condition
+#old#http://data.linkedct.org/resource/location/	linkedct:facility_address_country	http://db0.aksw.org:8895/sparql	false	LinkedCT Location
+http://localhost/ghocountry	rdfs:label	http://localhost:8890/sparql	false	GHO Country
+http://ghodata	rdfs:label	http://lgd.aksw.org:8900/sparql	false	GHO
+#old#http://ghodata	rdfs:label	http://db0.aksw.org:8895/sparql	false	GHO
+http://linkedgeodata.org/triplify/	rdfs:label	http://live.linkedgeodata.org/sparql	true	LinkedGeoData
+http://sws.geonames.org/	geonames:name	http://lgd.aksw.org:8900/sparql	true	GeoNames
+http://www.fao.org/countryprofiles/geoinfo/	fao:nameList	http://lgd.aksw.org:5678/sparql	false	FAO Country
+http://www4.wiwiss.fu-berlin.de/factbook/resource/	rdfs:label	http://www4.wiwiss.fu-berlin.de/factbook/sparql	false	Factbook Country
+http://www4.wiwiss.fu-berlin.de/diseasome/resource/	rdfs:label	http://www4.wiwiss.fu-berlin.de/diseasome/sparql	false	Diseasome
+http://airports.dataincubator.org/airports/	rdfs:label	http://api.talis.com/stores/airports/services/sparql	true	Dataincubator Airport

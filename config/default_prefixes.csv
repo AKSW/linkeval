@@ -1,0 +1,12 @@
+rdf	http://www.w3.org/1999/02/22-rdf-syntax-ns#
+rdfs	http://www.w3.org/2000/01/rdf-schema#
+lgdo	http://linkedgeodata.org/ontology/
+lgdp	http://linkedgeodata.org/property/
+dbpedia-owl	http://dbpedia.org/ontology/
+umbel-sc	http://umbel.org/umbel/sc/
+dc	http://purl.org/dc/elements/1.1/
+gho	http://ghodata/
+linkedct	http://data.linkedct.org/vocab/
+geonames	http://www.geonames.org/ontology#
+wgs84	http://www.w3.org/2003/01/geo/wgs84_pos#
+fao	http://www.fao.org/countryprofiles/geoinfo/geopolitical/resource/
