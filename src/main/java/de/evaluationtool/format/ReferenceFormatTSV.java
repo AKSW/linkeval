@@ -13,10 +13,10 @@ import de.evaluationtool.Reference;
 
 /** Tab separated reference format with the columns containing in this order: URI1 URI2 confidence correctness (correctness is optional) 
  * @author Konrad Höffner */
-public class ReferenceFormatCSV extends ReferenceFormat
+public class ReferenceFormatTSV extends ReferenceFormat
 {
-	@Override public String getFileExtension()	{return "csv";}
-	@Override public String getDescription() {return "CSV (Tab Separated Values URI1 URI2 confidence? correctness?)";}
+	@Override public String getFileExtension()	{return "tsv";}
+	@Override public String getDescription() {return "TSV (Tab Separated Values URI1 URI2 confidence? correctness?)";}
 	@Override public boolean includesEvaluation()	{return true;}
 
 

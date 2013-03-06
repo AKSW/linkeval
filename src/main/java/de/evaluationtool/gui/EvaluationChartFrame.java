@@ -19,10 +19,6 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
-import org.jfree.data.time.Day;
-import org.jfree.data.time.RegularTimePeriod;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -32,7 +28,7 @@ import uk.ac.shef.wit.simmetrics.metrichandlers.MetricHandler;
 /**
  * A demo showing the addition and removal of multiple datasets / renderers.
  */
-public class EvaluationChartFrame extends JFrame implements ActionListener {
+@SuppressWarnings("serial") public class EvaluationChartFrame extends JFrame implements ActionListener {
 	
     /** The plot. */
     private XYPlot plot;
@@ -47,7 +43,7 @@ public class EvaluationChartFrame extends JFrame implements ActionListener {
     static final XYDataset EMPTY_DATASET = new XYSeriesCollection(new XYSeries(""));
 
     final JButton[] toggleButtons;
-    final JComboBox metricBox;
+    final JComboBox<String> metricBox;
     final JButton changeMetricButton;
     /**
      * Constructs a new demonstration application.
@@ -98,7 +94,7 @@ public class EvaluationChartFrame extends JFrame implements ActionListener {
         final JPanel buttonPanel = new JPanel(new FlowLayout());
 
         String[] metricNames = MetricHandler.GetMetricsAvailable().toArray(new String[0]);
-        metricBox = new JComboBox(metricNames);
+        metricBox = new JComboBox<String>(metricNames);
         buttonPanel.add(metricBox);
         metricBox.addActionListener(this);
         

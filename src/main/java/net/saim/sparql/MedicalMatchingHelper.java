@@ -1,21 +1,9 @@
 package net.saim.sparql;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
-
-import net.saim.datastructures.AlignmentCell;
-
-import org.jdom.JDOMException;
-
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 
-import de.evaluationtool.gui.CellPanel;
-import de.evaluationtool.gui.EvaluationFrame;
 import de.konrad.commons.sparql.PrefixHelper;
 import de.konrad.commons.sparql.SPARQLHelper;
 

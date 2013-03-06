@@ -40,9 +40,9 @@ import de.evaluationtool.gui.EvaluationFrame;
  * in another thread which also uses a short delay (100 ms as of this writing, changable via the constant
  * in another thread which also uses a short delay (100 ms as of this writing, changable via the constant
  * EvaluationFrame.QUERY_DELAY). This means that you should be able to set the load limit to 0 (unlimited) in most cases.</li> 
- * <li>There is now an option to save as alignment format xml, in addition to saving as csv.
+ * <li>There is now an option to save as alignment format xml, in addition to saving as tsv.
  * Saving in alignment format will use the users input as correctness values whereas the correctness values are either 1.0 (marked as correct) or 0.0 (marked as incorrect).
- * As with the csv save, only marked pairs will be saved.</li>
+ * As with the tsv save, only marked pairs will be saved.</li>
  * <li>The layout has been improved. The correctness buttons are now located to the left.
  * While this may be counterintuitive it makes sure that the layout of each column does not vary as wildly.
  * If you have a better idea for the layout please tell me.
@@ -56,7 +56,7 @@ import de.evaluationtool.gui.EvaluationFrame;
  mappings of two entities each together with an estimated correctness value.
  The user then views the labels of those mappings and decides whether each mapping is correct or incorrect.
  Based on this input the subset of the input that is marked by the user can be saved as another file of either
- a csv format or in the alignment format
+ a tsv format or in the alignment format
  whereas the correctness values are either 1.0 (marked as correct) or 0.0 (marked as incorrect).
  This allows using the alignment api for evaluating the user-based correctness of the input mapping against correctness values from the input.  
  The alignment api homepage is <a href="http://alignapi.gforge.inria.fr">http://alignapi.gforge.inria.fr</a> at the moment of the writing of this comment.
@@ -68,7 +68,7 @@ public class EvaluationTool
 {
 	public static final File LOAD_LIMIT_FILE = new File("config/loadlimit.txt");
 	public static final File AUTO_EVAL_DISTANCE_FILE = new File("config/autoevaldistance.txt");	
-	public static final File NAMESOURCE_FILE = new File("config/namesources.csv");
+	public static final File NAMESOURCE_FILE = new File("config/namesources.tsv");
 	public static final File README_TEMPLATE_FILE = new File("config/README.txt.template");
 
 	public static void main(String[] args)

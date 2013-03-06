@@ -50,7 +50,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import lombok.Cleanup;
-import net.saim.util.CSVHelper;
+import net.saim.util.TSVHelper;
 
 import org.aksw.commons.util.Statistic;
 import org.apache.commons.io.FileUtils;
@@ -133,17 +133,17 @@ public class EvaluationFrame extends JFrame
 	//	JMenuItem loadReferenceItem = new JMenuItem("Load Reference XML File");
 	//	JMenuItem loadReferenceNTItem = new JMenuItem("Load Reference N Triples File");
 	//	JMenuItem loadEvaluationXMLItem = new JMenuItem("Load Evaluation XML File");
-	//	//JMenuItem loadReferenceCSVItem = new JMenuItem("Load Reference File in Amrapalis External Format");	
-	//	JMenuItem loadReferenceAlignmentCSVItem = new JMenuItem("Load Reference Alignment CSV File");
+	//	//JMenuItem loadReferenceTSVItem = new JMenuItem("Load Reference File in Amrapalis External Format");	
+	//	JMenuItem loadReferenceAlignmentTSVItem = new JMenuItem("Load Reference Alignment TSV File");
 	//	JMenuItem loadPositiveNegativeNTItem = new JMenuItem("Load positive, negative, unsure and unchecked.nt files");
-	//	JMenuItem[] loadMenuItems = {loadSameAsNTItem,loadReferenceItem,loadReferenceNTItem,loadEvaluationXMLItem,loadReferenceAlignmentCSVItem,loadPositiveNegativeNTItem};
+	//	JMenuItem[] loadMenuItems = {loadSameAsNTItem,loadReferenceItem,loadReferenceNTItem,loadEvaluationXMLItem,loadReferenceAlignmentTSVItem,loadPositiveNegativeNTItem};
 	JMenuItem[] fileMenuItems = {loadReferenceItem,saveReferenceOnlyItem,saveReferenceAndEvaluationItem};
 
 	//	private JMenu saveMenu = new JMenu("Save");
 	////	JMenuItem savePositiveNegativeNTItem = new JMenuItem("Save as positive, negative, unsure and unchecked.nt files");
 	////	JMenuItem saveXMLItem = new JMenuItem("Save Evaluation as XML");
-	////	JMenuItem saveCSVItem = new JMenuItem("Save Evaluation as CSV");
-	////	JMenuItem[] saveMenuItems = {savePositiveNegativeNTItem,saveXMLItem,saveCSVItem};
+	////	JMenuItem saveTSVItem = new JMenuItem("Save Evaluation as TSV");
+	////	JMenuItem[] saveMenuItems = {savePositiveNegativeNTItem,saveXMLItem,saveTSVItem};
 	//	JMenuItem[] saveMenuItems = {};
 
 	private JMenu operationMenu = new JMenu("Operations");
@@ -286,10 +286,9 @@ public class EvaluationFrame extends JFrame
 
 		try
 		{
-			nameSourcesIntermediate = CSVHelper.csvToArray(nameSourceFile, 4,false);
+			nameSourcesIntermediate = TSVHelper.tsvToArray(nameSourceFile, 4,false);
 		} catch (FileNotFoundException e)
-		{
-			nameSourcesIntermediate = null;
+		{			
 			JOptionPane.showMessageDialog(this,"Could not load name source file "+nameSourceFile.getPath()+". Exiting Evaluation Tool.");
 			System.exit(1);
 		}
@@ -499,7 +498,7 @@ public class EvaluationFrame extends JFrame
 	//		updateTitle();
 	//	}
 
-	//	public void loadReferenceAlignmentCSV(File selectedFile) throws FileNotFoundException
+	//	public void loadReferenceAlignmentTSV(File selectedFile) throws FileNotFoundException
 	//	{
 	//		Scanner in = new Scanner(selectedFile);
 	//		String line;
@@ -520,7 +519,7 @@ public class EvaluationFrame extends JFrame
 	//			String[] tokens = line.split("\t");
 	//			if(tokens.length!=3)
 	//			{
-	//				JOptionPane.showConfirmDialog(this,"wrong csv. expected 3 columns in each line, tab separated. offending line:\""+line+"\"");
+	//				JOptionPane.showConfirmDialog(this,"wrong tsv. expected 3 columns in each line, tab separated. offending line:\""+line+"\"");
 	//				return;
 	//			}
 	//			entity1 = tokens[0];
@@ -546,7 +545,7 @@ public class EvaluationFrame extends JFrame
 	//		startLabelThread();
 	//	}
 
-	//	public void loadReferenceAlignmentCSV(File selectedFile) throws FileNotFoundException
+	//	public void loadReferenceAlignmentTSV(File selectedFile) throws FileNotFoundException
 	//	{
 	//		JOptionPane.showMessageDialog(this, "under construction");
 	//		//		Scanner in = new Scanner(selectedFile);
@@ -691,7 +690,7 @@ public class EvaluationFrame extends JFrame
 		}
 	}
 
-	void saveCSV(File file)
+	void saveTSV(File file)
 	{
 		try
 		{

@@ -29,11 +29,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.JFileChooser;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.io.FileUtils;
@@ -91,15 +89,15 @@ class EvaluationFrameActionListener implements ActionListener
 	//		//catch (IOException e){e.printStackTrace();}
 	//	}
 	//
-	//	private void loadReferenceAlignmentCSV()
+	//	private void loadReferenceAlignmentTSV()
 	//	{
-	//		JFileChooser chooser = new JFileChooser("Choose input evaluation alignment csv file");
+	//		JFileChooser chooser = new JFileChooser("Choose input evaluation alignment tsv file");
 	//		chooser.setCurrentDirectory(new File("input"));
 	//		int returnVal = chooser.showOpenDialog(frame);
 	//		if(returnVal == JFileChooser.APPROVE_OPTION)
 	//			try
 	//		{	
-	//				frame.loadReferenceAlignmentCSV(chooser.getSelectedFile());
+	//				frame.loadReferenceAlignmentTSV(chooser.getSelectedFile());
 	//		}
 	//		catch (FileNotFoundException e) {e.printStackTrace();} // won't happen
 	//		//catch (IOException e){	e.printStackTrace();}		
@@ -132,7 +130,7 @@ class EvaluationFrameActionListener implements ActionListener
 	//		JFileChooser inputChooser;
 	//		JFileChooser outputChooser;
 	//		{
-	//			inputChooser = new JFileChooser("Choose input amrapalis format CSV file");
+	//			inputChooser = new JFileChooser("Choose input amrapalis format TSV file");
 	//			inputChooser.setCurrentDirectory(new File("input"));
 	//
 	//			int returnVal = inputChooser.showOpenDialog(frame);
@@ -185,9 +183,9 @@ class EvaluationFrameActionListener implements ActionListener
 		}
 	}     
 
-	private void saveCSV()
+	private void saveTSV()
 	{
-		JFileChooser chooser = new JFileChooser("Save evaluation result as CSV");
+		JFileChooser chooser = new JFileChooser("Save evaluation result as TSV");
 		chooser.setCurrentDirectory(frame.defaultDirectory);
 		int returnVal = chooser.showSaveDialog(frame);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
@@ -197,7 +195,7 @@ class EvaluationFrameActionListener implements ActionListener
 			{
 				return;
 			}
-			frame.saveCSV(chooser.getSelectedFile());
+			frame.saveTSV(chooser.getSelectedFile());
 		}
 	}     
 
@@ -448,15 +446,15 @@ class EvaluationFrameActionListener implements ActionListener
 			//			if(event.getSource()==frame.loadReferenceItem) {loadReference();}
 			//			if(event.getSource()==frame.loadReferenceNTItem) {loadReferenceNT();}		
 			//			if(event.getSource()==frame.loadEvaluationXMLItem) {loadEvaluationXML();}
-			//			//if(event.getSource()==frame.loadReferenceCSVItem) {loadReferenceCSV();}		
+			//			//if(event.getSource()==frame.loadReferenceTSVItem) {loadReferenceTSV();}		
 			//			if(event.getSource()==frame.loadPositiveNegativeNTItem) {loadPositiveNegativeNT();}	
-			//			if(event.getSource()==frame.loadReferenceAlignmentCSVItem) {loadReferenceAlignmentCSV();}
+			//			if(event.getSource()==frame.loadReferenceAlignmentTSVItem) {loadReferenceAlignmentTSV();}
 
 
 			// save
 			//			if(event.getSource()==frame.savePositiveNegativeNTItem)	{savePositiveNegativeNT();}
 			//			if(event.getSource()==frame.saveXMLItem) {saveXML();}
-			//			if(event.getSource()==frame.saveCSVItem) {saveCSV();}
+			//			if(event.getSource()==frame.saveTSVItem) {saveTSV();}
 
 			// options
 			// operations
@@ -491,15 +489,15 @@ class EvaluationFrameActionListener implements ActionListener
 		try
 		{
 			Desktop desktop = Desktop.getDesktop();
-			desktop.edit(new File("config/namesources.csv"));
+			desktop.edit(new File("config/namesources.tsv"));
 		}
 		catch(Exception e)
 		{
 			//Fallback
-			final Process p = Runtime.getRuntime().exec("gedit config/namesources.csv");
+			final Process p = Runtime.getRuntime().exec("gedit config/namesources.tsv");
 			if(p.waitFor()!=0)
 			{
-				final Process q = Runtime.getRuntime().exec("edit config/namesources.csv");
+				final Process q = Runtime.getRuntime().exec("edit config/namesources.tsv");
 			}
 
 			//	(new Thread() {			

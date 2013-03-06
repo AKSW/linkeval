@@ -216,7 +216,7 @@ public class CellPanel extends JPanel
 		String[] names = new String[entities.length];
 		String sparqlEndpoint = null;
 		String predicate = null;
-		String prefixString = null;
+		
 		
 		switch(mode)
 		{
@@ -258,7 +258,7 @@ public class CellPanel extends JPanel
 
 		StringBuffer queryBuffer = new StringBuffer();
 		// optimize for runtime by determining the prefix string only once
-		if(prefixString==null) {prefixString=PrefixHelper.formatPrefixes(PrefixHelper.restrictPrefixes(SPARQLHelper.getDefaultPrefixes(), predicate));}
+		String prefixString = PrefixHelper.formatPrefixes(PrefixHelper.restrictPrefixes(SPARQLHelper.getDefaultPrefixes(), predicate));
 		queryBuffer.append(prefixString);
 		queryBuffer.append(" select * where {?entity " + predicate + " ?name. filter (");					
 		for(String entity:entities)
@@ -387,7 +387,6 @@ public class CellPanel extends JPanel
 		unsureButton.addActionListener(cpListener);
 		openURLsButton.addActionListener(cpListener);
 	}
-
 	
 
 	private class CellPanelActionListener implements ActionListener

@@ -6,8 +6,8 @@ import java.util.Map;
 /** @author Konrad Höffner */
 public class PrefixHelper
 {
-	//final static File prefixCSV = new File("config/prefixes.csv");
-	// public static final PrefixHelper INSTANCE = new PrefixHelper(new File("config/prefix.csv"));
+	//final static File prefixTSV = new File("config/prefixes.tsv");
+	// public static final PrefixHelper INSTANCE = new PrefixHelper(new File("config/prefix.tsv"));
 
 	// no bidirectional map as the there may be multiple prefixes for the same URI
 	// in this case uriToPrefix contains the most common prefix 
@@ -85,7 +85,7 @@ public class PrefixHelper
 	//		{
 	//			prefixToURI = new HashMap<String,String>();
 	//			uriToPrefix = new HashMap<String,String>();
-	//			@Cleanup BufferedReader in = new BufferedReader(new FileReader(prefixCSV));		
+	//			@Cleanup BufferedReader in = new BufferedReader(new FileReader(prefixTSV));		
 	//
 	//			String line;
 	//			while((line = in.readLine())!=null)
@@ -94,7 +94,7 @@ public class PrefixHelper
 	//				String[] tokens = line.split("\t");			
 	//				if(tokens.length!=2)
 	//				{
-	//					throw new IOException("Error in the following line in the csv: \""+line+"\". " +
+	//					throw new IOException("Error in the following line in the tsv: \""+line+"\". " +
 	//					"Expected exactly 2 columns separated by a tabulator character.");
 	//				}
 	//				prefixToURI.put(tokens[0], tokens[1]);
@@ -139,7 +139,7 @@ public class PrefixHelper
 	//		out.close();
 	//	}
 
-	//	public static void saveToCSVFile(Map<String,String> shortToLongForm, File f) throws IOException
+	//	public static void saveToTSVFile(Map<String,String> shortToLongForm, File f) throws IOException
 	//	{
 	//		PrintWriter out = new PrintWriter(new FileWriter(f));		
 	//		for(String shortForm : shortToLongForm.keySet())
@@ -179,7 +179,7 @@ public class PrefixHelper
 		return prefixSPARQLString.substring(0, prefixSPARQLString.length()-1);
 	}
 
-	//	private static SortedMap<String,String> loadFromCSVFile(File f) throws IOException
+	//	private static SortedMap<String,String> loadFromTSVFile(File f) throws IOException
 	//	{
 	//		BufferedReader in = new BufferedReader(new FileReader(f));		
 	//		SortedMap<String,String> prefixes = new TreeMap<String,String>();
@@ -191,7 +191,7 @@ public class PrefixHelper
 	//			String[] tokens = line.split("\t");			
 	//			if(tokens.length!=2)
 	//			{
-	//				throw new IOException("Error in the following line in the csv: \""+line+"\". " +
+	//				throw new IOException("Error in the following line in the tsv: \""+line+"\". " +
 	//				"Expected exactly 2 columns separated by a tabulator character.");
 	//			}
 	//			prefixes.put(tokens[0], tokens[1]);

@@ -2,20 +2,10 @@ package de.konrad.commons.sparql;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.concurrent.TimeoutException;
-
-import net.saim.sparql.Restriction;
-
-import org.aksw.commons.collections.random.RandomUtils;
 import org.aksw.commons.jena.ExtendedQueryEngineHTTP;
-import org.apache.commons.collections15.MultiMap;
-import org.apache.commons.collections15.multimap.MultiHashMap;
 import org.apache.commons.io.FileUtils;
 
 import com.hp.hpl.jena.query.ARQ;
@@ -23,10 +13,8 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.Syntax;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 //import de.uni_leipzig.simba.data.Instance;
@@ -51,17 +39,20 @@ public class SPARQLHelper
 	//public static int TIMEOUT = 10000;
 
 	/**
-	 * @param text a string in two-row csv format.
+	 * @param text a string in two-row tsv format.
 	 * @return a map with an entry for each line where the first row is the key and the second row the value
 	 */
 	public static Map<String, String> textToMap(String text)
 	{
 		HashMap<String,String> prefixes = new HashMap<String,String>();
-		Scanner in = new Scanner(text);
+		//Scanner in = new Scanner(text);
+		try(Scanner in = new Scanner(text))
+		{
 		while(in.hasNext())
 		{
 			String[] tokens = in.nextLine().split("\t");
 			if(tokens.length==2) prefixes.put(tokens[0],tokens[1]);
+		}
 		}
 		return prefixes;
 	}
@@ -70,7 +61,7 @@ public class SPARQLHelper
 	{
 		try
 		{
-			return textToMap(FileUtils.readFileToString(new File("config/default_prefixes.csv")));
+			return textToMap(FileUtils.readFileToString(new File("config/default_prefixes.tsv")));
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -100,8 +91,7 @@ public class SPARQLHelper
 			RuntimeException("Error with query \""+query+"\" at endpoint \""+endpoint+"\" and graph "+(graph!=null?'"'+graph+'"':" no graph")+".",e);
 		}
 	}
-
-	@SuppressWarnings("deprecation")
+	
 	public static ResultSet query(String sparqlEndpoint, String graph, String query, int timeout)
 	{
 		ExtendedQueryEngineHTTP queryExecution = new ExtendedQueryEngineHTTP(sparqlEndpoint, query);

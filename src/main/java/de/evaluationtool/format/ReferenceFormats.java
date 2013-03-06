@@ -29,7 +29,7 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 /** @author Konrad Höffner */
 public class ReferenceFormats
 {
-	public static final ReferenceFormat[] formatArray = {new ReferenceFormatNT(), new ReferenceFormatCSV(),new ReferenceFormatAlignment()};
+	public static final ReferenceFormat[] formatArray = {new ReferenceFormatNT(), new ReferenceFormatTSV(),new ReferenceFormatAlignment()};
 	public static final Set<ReferenceFormat> formats = new HashSet<ReferenceFormat>(Arrays.asList(formatArray));
 	
 	/** singleton for accessing the nonstatic fields*/

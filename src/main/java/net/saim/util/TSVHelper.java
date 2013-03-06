@@ -6,15 +6,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
-public class CSVHelper
+public class TSVHelper
 {
 
-	public static String[][] csvToArray(File f, int columns) throws FileNotFoundException
+	public static String[][] tsvToArray(File f, int columns) throws FileNotFoundException
 	{
-		return csvToArray(f,columns,true);
+		return tsvToArray(f,columns,true);
 	}
 
-	public static String[][] csvToArray(File f, int columns,boolean useFirstLine) throws FileNotFoundException
+	public static String[][] tsvToArray(File f, int columns,boolean useFirstLine) throws FileNotFoundException
 	{
 		List<String[]> rows = new LinkedList<String[]>(); 
 		Scanner in = new Scanner(f);
