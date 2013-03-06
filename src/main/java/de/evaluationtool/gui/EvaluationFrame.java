@@ -56,6 +56,7 @@ import org.aksw.commons.util.Statistic;
 import org.apache.commons.io.FileUtils;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
@@ -601,18 +602,11 @@ public class EvaluationFrame extends JFrame
 		SAVE_EVERYTHING, SAVE_CORRECT_ONLY, SAVE_INCORRECT_AS_SOMETHING_ELSE  
 	}
 
-	void saveXML(File file,SaveXMLMode mode)
+	void saveXML(File file,SaveXMLMode mode) throws JDOMException, IOException
 	{
 		File ALIGNMENT_TEMPLATE = new File("config/alignment_template.xml");
-		Document doc = null;
-		try
-		{
-			doc = new SAXBuilder().build(ALIGNMENT_TEMPLATE);
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
+		Document doc = new SAXBuilder().build(ALIGNMENT_TEMPLATE);
+		
 		Namespace alignmentNS = Namespace
 		.getNamespace("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#");
 		Namespace rdfNS = Namespace.getNamespace("rdf",
@@ -834,26 +828,22 @@ public class EvaluationFrame extends JFrame
 
 	public void saveReferenceXML(File selectedFile,boolean saveUnmarked)
 	{
-		EvaluationFrame.saveReferenceXML(selectedFile,cellPanels,saveUnmarked,false);
+		try {EvaluationFrame.saveReferenceXML(selectedFile,cellPanels,saveUnmarked,false);}
+		catch (JDOMException | IOException e) {JOptionPane.showConfirmDialog(this, e, "Error saving XML", JOptionPane.ERROR_MESSAGE);}
 	}
 
 	/**
 	 * @param selectedFile
 	 * @param cellPanels
 	 * @param saveUnmarked If set to true, all cell panels contents will be saved, else only cell panels marked "correct" or "incorrect" will be saved. 
+	 * @throws IOException 
+	 * @throws JDOMException 
 	 */
-	public static void saveReferenceXML(File selectedFile,List<CellPanel> cellPanels,boolean saveUnmarked,boolean append)
+	public static void saveReferenceXML(File selectedFile,List<CellPanel> cellPanels,boolean saveUnmarked,boolean append) throws JDOMException, IOException
 	{
 		System.out.println("Saving reference xml");
 		final File alignmentTemplate = append?selectedFile:new File("config/alignment_template.xml");
-		Document doc = null;
-		try
-		{
-			doc = new SAXBuilder().build(alignmentTemplate);
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		Document doc = new SAXBuilder().build(alignmentTemplate);
 
 		Namespace alignmentNS = Namespace
 		.getNamespace("http://knowledgeweb.semanticweb.org/heterogeneity/alignment#");

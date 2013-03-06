@@ -35,6 +35,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.io.FileUtils;
+import org.jdom.JDOMException;
 import org.jfree.ui.FilesystemFilter;
 
 import de.evaluationtool.EvaluationTool;
@@ -179,7 +180,8 @@ class EvaluationFrameActionListener implements ActionListener
 			{
 				return;
 			}
-			frame.saveXML(chooser.getSelectedFile(),SaveXMLMode.SAVE_EVERYTHING);
+			try {frame.saveXML(chooser.getSelectedFile(),SaveXMLMode.SAVE_EVERYTHING);}
+			catch (JDOMException | IOException e) {JOptionPane.showConfirmDialog(frame, e, "Error saving XML", JOptionPane.ERROR_MESSAGE);}
 		}
 	}     
 
