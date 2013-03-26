@@ -38,7 +38,7 @@ import org.apache.commons.io.FileUtils;
 import org.jdom.JDOMException;
 import org.jfree.ui.FilesystemFilter;
 
-import de.evaluationtool.EvaluationTool;
+import de.evaluationtool.gui.EvaluationTool;
 import de.evaluationtool.Link;
 import de.evaluationtool.Reference;
 import de.evaluationtool.format.ReferenceFormat;

@@ -70,7 +70,7 @@ import org.semanticweb.owl.align.Alignment;
 import uk.ac.shef.wit.simmetrics.metrichandlers.MetricHandler;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import de.evaluationtool.Correctness;
-import de.evaluationtool.LabelThread;
+import de.evaluationtool.gui.LabelThread;
 import de.evaluationtool.Link;
 import de.evaluationtool.NameSource;
 import de.evaluationtool.Reference;

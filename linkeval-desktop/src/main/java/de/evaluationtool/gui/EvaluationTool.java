@@ -18,12 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.evaluationtool;
+package de.evaluationtool.gui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import de.evaluationtool.gui.EvaluationFrame;
 
 /**
  * Ideas for Version 0.3:

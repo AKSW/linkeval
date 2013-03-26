@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.evaluationtool;
+package de.evaluationtool.gui;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -27,8 +27,6 @@ import com.javadocmd.simplelatlng.LatLng;
 import com.javadocmd.simplelatlng.LatLngTool;
 import com.javadocmd.simplelatlng.util.LengthUnit;
 
-import de.evaluationtool.gui.CellPanel;
-import de.evaluationtool.gui.EvaluationFrame;
 
 
 /** @author Konrad Höffner */

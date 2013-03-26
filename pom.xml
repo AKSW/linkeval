@@ -3,15 +3,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">	
 	<modelVersion>4.0.0</modelVersion>
 	
-	<artifactId>evaluationtool</artifactId>
-	<groupId>de.evaluationtool</groupId>
-	<packaging>jar</packaging>
+	<artifactId>linkeval-parent</artifactId>
+	<groupId>de.linkeval</groupId>
+	<packaging>pom</packaging>
 	<version>0.1-SNAPSHOT</version>
 	
-	<name>Evaluation Tool</name>
-	<description>Evaluation Tool is a Java SWING Application that allows you to manually evaluate RDF interlinks. It can import links in ntriples and an xml alignment format.
+	<name>Link Evaluation Tool</name>
+	<description>Link Evaluation Tool is a Java SWING and Vaadin Application that allows you to manually evaluate RDF interlinks. It can import links in ntriples and an xml alignment format.
 A (possibly outdated) documentation can be found at http://konradhoeffner.de/evaluationtool/index.html.</description>
-	<url>https://sourceforge.net/projects/saim/</url>
+	<url>https://github.com/AKSW/linkeval</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -29,6 +29,26 @@ A (possibly outdated) documentation can be found at http://konradhoeffner.de/eva
 		</repository>
 	</repositories>
 
+<dependencyManagement>
+<dependencies>
+			<dependency>
+				<groupId>de.linkeval</groupId>
+				<artifactId>linkeval-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.linkeval</groupId>
+				<artifactId>linkeval-desktop</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.linkeval</groupId>
+				<artifactId>linkeval-web</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+</dependencies>
+</dependencyManagement>
 
   <dependencies>
   
@@ -133,20 +153,29 @@ A (possibly outdated) documentation can be found at http://konradhoeffner.de/eva
     </dependency>-->		
 	</dependencies>
 
-<build>
- <testSourceDirectory>src/test/java</testSourceDirectory>
-   <resources>
-    <resource>
-      <directory>src/main/java</directory>
-    </resource>    	
-		<resource>
-		 <directory>src/main/resources</directory>
-		 <filtering>false</filtering>
-		</resource>		
-  </resources>
-  <defaultGoal>compile</defaultGoal>
-  <!--<directory>${basedir}/bin</directory>-->
-		<plugins>
+
+	
+<inceptionYear>2010</inceptionYear>
+<organization>
+	<name>AKSW/MOLE Group, Department of Computer Science, University of Leipzig</name>
+	<url>http://aksw.org/Groups/MOLE</url>
+</organization>
+	 <developers>
+	 <developer>
+      <id>konradhoeffner</id>
+      <name>Konrad Höffner</name>
+      <email>konrad.hoeffner@uni-leipzig.de</email>
+      <timezone>0</timezone>
+    </developer>	 
+	 </developers>
+	 <modules>
+	 	<module>linkeval-core</module>
+	 	<module>linkeval-desktop</module>
+	 	<module>linkeval-web</module>
+	 </modules>
+	
+	<build> 
+	 	<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -162,44 +191,6 @@ A (possibly outdated) documentation can be found at http://konradhoeffner.de/eva
                     </execution>
                 </executions>				
 			</plugin>
-    <plugin>
-        <!-- NOTE: We don't need a groupId specification because the group is
-             org.apache.maven.plugins ...which is assumed by default.
-         -->
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2.1</version>
-        <configuration>
-	 <archive>
-            <manifest>
-              <mainClass>net.saim.scripts.CreateGHOLinkedCTSubclassLinks</mainClass>
-            </manifest>
-          </archive>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
-			</plugin>
-			  <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <configuration>          
-          <downloadJavadocs>true</downloadJavadocs>
-        </configuration>
-      </plugin>
 		</plugins>
 	</build>
-	
-<inceptionYear>2010</inceptionYear>
-<organization>
-	<name>AKSW/MOLE Group, Department of Computer Science, University of Leipzig</name>
-	<url>http://aksw.org/Groups/MOLE</url>
-</organization>
-	 <developers>
-	 <developer>
-      <id>konradhoeffner</id>
-      <name>Konrad Höffner</name>
-      <email>konrad.hoeffner@uni-leipzig.de</email>
-      <timezone>0</timezone>
-    </developer>	 
-	 </developers>
 </project>
