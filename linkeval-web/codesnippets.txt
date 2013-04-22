@@ -1,0 +1,2166 @@
+	Panel mainPanel = new Panel("URI Display");
+    	Panel loginPanel =new Panel("Login");
+    	
+    	mainPanel.setWidth("100%");
+    	mainPanel.setHeight("100%");
+    	loginPanel.setWidth("100%");
+    	loginPanel.setHeight("100%");
+      	// Create absolute layout specifying its properties
+    	final AbsoluteLayout layout = new AbsoluteLayout();
+    	final AbsoluteLayout loginLayout= new AbsoluteLayout();
+       	layout.setWidth("100%");
+    	layout.setHeight("100%");
+    	layout.setSizeFull();
+    	loginLayout.setSizeFull();
+       	//setContent(layout);
+    	/*layout.setWidth("800px");
+    	layout.setHeight("650px");*/
+       	
+    	// Create components Objects and specify their properties
+       	Button btnLoad = new Button("Load task");
+    	Button btnPrevious = new Button( "Previous");
+    	Button btnNext = new Button("Next");
+    	Button btnCorrect = new Button("Correct");
+    	Button btnIncorrect = new Button("Incorrect");
+    	Button btnUnsure = new Button("Unsure");
+    	//-----------------------------------------------
+    	Button btnLogin = new Button("Login"); 
+    	
+    	Link sourceURI = new Link("Source URI", new ExternalResource("http://vaadin.com/"));
+    	Link destinationURI = new Link("Destination URI", new ExternalResource("http://google.com/"));
+    	
+    	final Table tblSourcePropertiesMapping = new Table("Source Properties");
+    	Table tblDestinationPropertiesMapping = new Table("Destination Properties");
+
+    	/* Define the names and data types of columns.
+    	 * The "default value" parameter is meaningless here. */
+    	tblSourcePropertiesMapping.addContainerProperty("Property", String.class,  null);
+    	tblSourcePropertiesMapping.addContainerProperty("Value",  String.class,  null);
+
+    	tblDestinationPropertiesMapping.addContainerProperty("Property",  String.class,  null);
+    	tblDestinationPropertiesMapping.addContainerProperty("Value",  String.class,  null);
+
+    	
+    	/* Add a few items in the table. */
+    	tblSourcePropertiesMapping.addItem(new Object[] {
+    	    "Nicolaus","Copernicus"}, new Integer(1));
+    	tblSourcePropertiesMapping.addItem(new Object[] {
+    	    "Nicolaus",   "Copernicus"}, new Integer(2));
+    	
+    	tblDestinationPropertiesMapping.addItem(new Object[] {
+        	    "Tycho",   "Brahe"}, new Integer(1));
+    	tblDestinationPropertiesMapping.addItem(new Object[] {
+        	    "Tycho",   "Brahe"}, new Integer(2));
+    	
+    	
+    	// Add eventhandlers for some of the componenets
+    	btnLoad.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	/*final Window window = new Window("Window");
+                final AbsoluteLayout content = new AbsoluteLayout();
+                window.setContent(content);
+                UI.getCurrent(). addWindow(window);*/
+                layout.addComponent(new Label("ya wallaaaa"));
+                try 
+                {
+                	{
+                		infoList= new ArrayList<LinkCandidate>();
+                		Connection con = null;
+                		String driver = "com.mysql.jdbc.Driver";
+                		  try
+                		  {
+                			  Class.forName(driver);
+                			  con = DriverManager.getConnection("jdbc:mysql://localhost:3306/linkeval","root","mofo");
+                			  String selectStatement="SELECT * FROM Links";
+                			  Statement st = con.createStatement();
+                			  ResultSet linksRecords=st.executeQuery(selectStatement);
+                			  
+                			  while(linksRecords.next())
+                			  {
+                				  infoList.add(new LinkCandidate(linksRecords.getString("sourceURI"),linksRecords.getString("destinationURI"), linksRecords.getString("relationMapping")));
+                			  }
+                		  }
+                		 
+                		  catch (SQLException s)
+                		  {
+                			  //System.out.println("SQL statement is not executed!\n"+s.getMessage());
+                		  } catch (ClassNotFoundException e) {
+                			// TODO Auto-generated catch block
+                			e.printStackTrace();
+                		}
+                		  finally
+                		  {
+                			  try {
+                				con.close();
+                			} catch (SQLException e) {
+                				// TODO Auto-generated catch block
+                				e.printStackTrace();
+                			}
+                		  }
+                	                		
+                	}
+                	//List<LinkCandidate>candidateLinks=getLinksCandidates("jdbc:mysql://localhost:3306/","linkeval","root","mofo");
+                	tblSourcePropertiesMapping.addItem(new Object[] {"Nicolaus","Copernicus"}, new Integer(3));
+                	for (LinkCandidate candidate : infoList) 
+                	{
+                    	tblSourcePropertiesMapping.addItem(new Object[] {candidate.source,candidate.destination}, new Integer(4));
+            		}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+        });
+    	
+    	
+    	// add component to the layout specifying its position on the layout
+    	int leftStart=600,topStart=100, space=100;
+    	layout.addComponent(btnLoad, "left: 600px; top: 10px;");
+    	layout.addComponent(btnPrevious, "left: 600px; top: 60px;");
+    	layout.addComponent(btnNext, "left: 800px; top: 60px;");
+    	layout.addComponent(btnCorrect, "left: "+leftStart+"px; top: "+topStart+"px;");
+    	layout.addComponent(btnIncorrect, "left: "+(leftStart+space)+"px; top: "+topStart+"px;");
+    	layout.addComponent(btnUnsure, "left: "+(leftStart+2*space)+"px; top: "+topStart+"px;");
+    	layout.addComponent(sourceURI,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
+    	layout.addComponent(destinationURI,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");
+    	layout.addComponent(tblSourcePropertiesMapping,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space)+"px;");
+    	layout.addComponent(tblDestinationPropertiesMapping,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space)+"px;");
+    	loginLayout.addComponent(btnLogin);
+    	
+    	mainPanel.setContent(layout);
+    	/*	final Window window = new Window("Window");
+        final AbsoluteLayout content = new AbsoluteLayout();
+        window.setContent(content);
+        UI.getCurrent(). addWindow(window);*/
+    	
+    	
+    	//create the panel that will hold all components
+    	
+    	//mainPanel.setHeight(100.0f, Unit.PERCENTAGE);
+    	//MessageBox.showPlain(Icon.INFO, "Example 1", "Hello World!", ButtonId.OK);
+    	////////////////////////////////////////
+     /*   final HorizontalLayout layout = new HorizontalLayout();
+        layout.setMargin(true);
+        setContent(layout);
+        
+        Panel panel = new Panel("links");
+        panel.setSizeUndefined();
+        layout.addComponent(panel);*/
+        
+     // Create custom layout from "layoutname.html" template.
+     //   CustomLayout custom = new CustomLayout("layoutname");
+   //     custom.addStyleName("customlayoutexample");
+         
+        // Use it as the layout of the Panel.
+  /*      panel.setContent(custom);
+                
+        Button btnNext = new Button("Next");
+        Button btnCorrect = new Button("Correct");
+        Button btnIncorrect= new Button("Incorrect");
+        Button btnUnsure=new Button("Unsure");
+        
+        btnNext.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+                layout.addComponent(new Label("Next"));
+            }
+        });
+        btnCorrect.addClickListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                layout.addComponent(new Label("Correct"));
+            }
+        });
+        btnIncorrect.addClickListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                layout.addComponent(new Label("Incorrect"));
+            }
+        });
+        btnUnsure.addClickListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                layout.addComponent(new Label("Unsure"));
+            }
+        });
+        
+        layout.addComponent(btnNext);
+        layout.addComponent(btnCorrect);
+        layout.addComponent(btnIncorrect);
+        layout.addComponent(btnUnsure);*/
+        
+        
+        
+        
+        /////////////////////////////////
+                        Notification.show("Value changed:", valueString, Type.TRAY_NOTIFICATION);
+        ///////////////////////////////////////////////////////////////
+        package de.linkeval.web;
+
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.*;
+
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
+//import com.mysql.jdbc.Connection;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.query.TableQuery;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.LoginForm;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
+
+/*import de.steinwedel.messagebox.ButtonId;
+import de.steinwedel.messagebox.Icon;
+import de.steinwedel.messagebox.MessageBox;
+*/
+/**
+ * The Application's "main" class
+ */
+@SuppressWarnings("serial")
+public class LinkEvalUi extends UI
+{
+	
+	// Data structures declarations
+	List<LinkCandidate> infoList;
+	String UserId="",task="";
+	
+	Panel displayedPanel;
+    @Override
+    protected void init(VaadinRequest request) 
+    {
+    	
+    	displayedPanel=designLoginPanel();
+       	setContent(displayedPanel);
+    }
+    
+    private Panel designLoginPanel()
+    {
+    	
+    	final Panel loginPanel =new Panel("Login");
+    	List<String> users=null;
+   
+    	loginPanel.setWidth("100%");
+    	loginPanel.setHeight("100%");
+      	// Create absolute layout specifying its properties
+    	final AbsoluteLayout loginLayout= new AbsoluteLayout();
+    	loginLayout.setSizeFull();
+    	// Create components Objects and specify their properties
+    	int startLeft=200,startTop=300;
+    	try {
+			users=getLoginInfo("jdbc:mysql://localhost:3306/","linkeval","root","mofo");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       	Button btnLogin = new Button("Login"); 
+       	final ComboBox cmbUser = new ComboBox("Select your USER NAME");
+        final ComboBox cmbTask = new ComboBox("Select your TASK");
+        cmbUser.setNullSelectionAllowed(false);
+        cmbTask.setNullSelectionAllowed(false);
+        //Add data
+        
+        for (String user : users) 
+        {
+        	cmbUser.addItem(user);
+		}
+        cmbUser.setValue(cmbUser.getItemIds().iterator().next());
+        
+        //////Listeners
+
+        btnLogin.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	displayedPanel=designMainPanel();
+            	UI.getCurrent().setContent(displayedPanel);
+                UserId = String.valueOf(cmbUser.getValue());
+                task = String.valueOf(cmbTask.getValue());
+            }
+        });
+        
+        cmbUser.addValueChangeListener(new ValueChangeListener() {
+            @Override
+            public void valueChange(final ValueChangeEvent event) 
+            {
+                final String valueString = String.valueOf(event.getProperty().getValue());
+                Notification.show("Value changed:", valueString, Type.TRAY_NOTIFICATION);
+            
+                try {
+     				List<String>  tasks= getTasksInfo("jdbc:mysql://localhost:3306/","linkeval","root","mofo",valueString);
+     				cmbTask.removeAllItems();
+     				for (String task : tasks) 
+     				{
+     					cmbTask.addItem(task);
+     				}
+     				cmbTask.setValue(cmbTask.getItemIds().iterator().next());
+
+     			} catch (SQLException e) {
+     				// TODO Auto-generated catch block
+     				e.printStackTrace();
+     			}
+            }
+        });
+        
+        
+
+ 
+        loginLayout.addComponent(cmbUser, "left: 200px; top: 200px;");
+        loginLayout.addComponent(cmbTask, "left: 200px; top: 300px;");
+        loginLayout.addComponent(btnLogin, "left: 300px; top: 400px;");
+
+        loginPanel.setContent(loginLayout);
+    	
+       	return loginPanel;
+    }
+    
+    Link sourceURI,destinationURI;
+    int record_focused=0;
+    Label source,destination;
+    private Panel designMainPanel()
+    {
+    	//positioning indices
+    	final int leftStart=900,topStart=100, space=100;
+    	//create the panel that will hold all components
+    	Panel mainPanel = new Panel("URI Display");
+    	   	
+    	mainPanel.setWidth("100%");
+    	mainPanel.setHeight("100%");
+    	
+      	// Create absolute layout specifying its properties
+    	final AbsoluteLayout layout = new AbsoluteLayout();
+       	layout.setWidth("100%");
+    	layout.setHeight("100%");
+    	layout.setSizeFull();
+     	
+    	// Create components Objects and specify their properties
+       	Button btnLoad = new Button("Load task");
+    	Button btnPrevious = new Button( "Previous");
+    	Button btnNext = new Button("Next");
+    	Button btnCorrect = new Button("Correct");
+    	Button btnIncorrect = new Button("Incorrect");
+    	Button btnUnsure = new Button("Unsure");
+    	sourceURI = new Link("Source URI", new ExternalResource("http://vaadin.com/"));
+    	destinationURI = new Link("Destination URI", new ExternalResource("http://google.com/"));
+    	final Table tblSourcePropertiesMapping = new Table("Source Properties");
+    	Table tblDestinationPropertiesMapping = new Table("Destination Properties");
+    	final Table tblSourceDestination = new Table("Source and Destination URIs");
+    	tblSourceDestination.setSelectable(true);
+    	
+    	
+    	source= new Label("Source URI");
+    	destination= new Label("Destination URI");
+
+        //layout.addComponent(new Label("ya wallaaaa"));
+
+
+    	/* Define the names and data types of columns.
+    	 * The "default value" parameter is meaningless here. */
+    	tblSourcePropertiesMapping.addContainerProperty("Property", String.class,  null);
+    	tblSourcePropertiesMapping.addContainerProperty("Value",  String.class,  null);
+
+    	tblDestinationPropertiesMapping.addContainerProperty("Property",  String.class,  null);
+    	tblDestinationPropertiesMapping.addContainerProperty("Value",  String.class,  null);
+    	
+    	tblSourceDestination.addContainerProperty("Source URI",  String.class,  null);
+    	tblSourceDestination.addContainerProperty("Destination URI",  String.class,  null);
+    	
+    	/* Add a few items in the table. */
+    	tblSourcePropertiesMapping.addItem(new Object[] {
+    	    "Nicolaus","Copernicus"}, new Integer(1));
+    	tblSourcePropertiesMapping.addItem(new Object[] {
+    	    "Nicolaus",   "Copernicus"}, new Integer(2));
+    	
+    	tblDestinationPropertiesMapping.addItem(new Object[] {
+        	    "Tycho",   "Brahe"}, new Integer(1));
+    	tblDestinationPropertiesMapping.addItem(new Object[] {
+        	    "Tycho",   "Brahe"}, new Integer(2));
+    	
+    	
+    	
+    	//////////////////////////////////////////////////////////////////////
+    	/*for (int i = 0; i < container.size(); i++) {
+    	    Object id = container.getIdByIndex(i);
+    	    Item item = container.getItem(id);
+    	    // do stuff with item
+    	}*/
+    	//fill the Source and Destination URIs table
+    	SimpleJDBCConnectionPool connectionPool;    
+        try
+        {
+        	connectionPool = new SimpleJDBCConnectionPool("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/linkeval",
+                    "root", "mofo", 2,5);
+        	TableQuery tq = new TableQuery("Links", connectionPool);
+        	SQLContainer container = new SQLContainer(tq);
+        	
+        	/*//get specific value from SQLContainer
+        	IndexedContainer container2=new IndexedContainer();
+        	Object id = container.getIdByIndex(0);
+    	    Item item = container.getItem(id);
+    	    item.getItemProperty("sourceURI").toString();*/
+    	    
+    	   // tblSourceDestination.addItem(new Object[] {item.getItemProperty("sourceURI").toString(),item.getItemProperty("destinationURI").toString()}, new Integer(1));
+            //Notification.show("Value changed:", item.getItemProperty("sourceURI").toString(), Type.TRAY_NOTIFICATION);
+
+    	   // container2.addItem(item);
+        	tblSourceDestination.setContainerDataSource(container);
+        }
+        catch(Exception e)
+        {
+        	
+        }
+
+    	// Add eventhandlers for some of the componenets
+    	btnLoad.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+                Notification.show("Value changed:", tblSourceDestination.getValue().toString(), Type.TRAY_NOTIFICATION);
+            	
+            	/*try 
+                {
+                	{
+                		infoList= new ArrayList<LinkCandidate>();
+                		Connection con = null;
+                		String driver = "com.mysql.jdbc.Driver";
+                		  try
+                		  {
+                			  Class.forName(driver);
+                			  con = DriverManager.getConnection("jdbc:mysql://localhost:3306/linkeval","root","mofo");
+                			  String selectStatement="SELECT * FROM Links WHERE taskId= "+ task;
+                			  Statement st = con.createStatement();
+                			  ResultSet linksRecords=st.executeQuery(selectStatement);
+                			  
+                			  while(linksRecords.next())
+                			  {
+                				  infoList.add(new LinkCandidate(linksRecords.getString("sourceURI"),linksRecords.getString("destinationURI"), linksRecords.getString("relationMapping"),linksRecords.getString("decision"),linksRecords.getString("time")));
+                			  }
+                		  }
+                		 
+                		  catch (SQLException s)
+                		  {
+                			  
+                		  } catch (ClassNotFoundException e) {
+                			// TODO Auto-generated catch block
+                			e.printStackTrace();
+                		}
+                		  finally
+                		  {
+                			  try {
+                				con.close();
+                			} catch (SQLException e) {
+                				// TODO Auto-generated catch block
+                				e.printStackTrace();
+                			}
+                		  }
+                	                		
+                	}
+                	tblSourcePropertiesMapping.addItem(new Object[] {"Nicolaus","Copernicus"}, new Integer(3));
+                	for (LinkCandidate candidate : infoList) 
+                	{
+                    	tblSourcePropertiesMapping.addItem(new Object[] {candidate.source,candidate.destination}, new Integer(4));
+            		}
+                	//layout.replaceComponent(oldComponent, newComponent)
+                	record_focused=0;
+                	sourceURI = new Link(infoList.get(record_focused).source, new ExternalResource(infoList.get(record_focused).source));
+                	destinationURI = new Link(infoList.get(record_focused).destination, new ExternalResource(infoList.get(record_focused).destination));
+                	source.setValue(infoList.get(record_focused).source);
+                	destination.setValue(infoList.get(record_focused).destination);
+                	layout.removeComponent(source);
+                	layout.removeComponent(destination);
+
+                	layout.addComponent(source,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
+                	layout.addComponent(destination,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");
+                	record_focused++;
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} */
+                
+            }
+        });
+   	
+    	btnNext.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	if(record_focused < infoList.size())
+            	{
+	            	sourceURI = new Link(infoList.get(record_focused).source, new ExternalResource(infoList.get(record_focused).source));
+	            	destinationURI = new Link(infoList.get(record_focused).destination, new ExternalResource(infoList.get(record_focused).destination));
+	            	layout.removeComponent(source);
+                	layout.removeComponent(destination);
+                	source.setValue(infoList.get(record_focused).source);
+                	destination.setValue(infoList.get(record_focused).destination);
+	            	layout.addComponent(source,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
+	            	layout.addComponent(destination,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");
+	            	record_focused++;
+            	}                
+            }
+        });
+    	btnPrevious.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	if(record_focused > 0)
+            	{
+	            	record_focused--;
+	            	/*sourceURI = new Link(infoList.get(record_focused).source, new ExternalResource(infoList.get(record_focused).source));
+	            	destinationURI = new Link(infoList.get(record_focused).destination, new ExternalResource(infoList.get(record_focused).destination));
+	            	layout.removeComponent(source);
+                	layout.removeComponent(destination);*/
+                	source.setValue(infoList.get(record_focused).source);
+                	destination.setValue(infoList.get(record_focused).destination);
+	            	/*layout.addComponent(source,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
+	            	layout.addComponent(destination,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");*/
+            	}
+            }
+        });
+    	
+    	/*tblSourceDestination.addValueChangeListener(new TableValueChangeListener(){});
+    	tblSourceDestination.addListener(new TableValueChangeListener() {
+    	    public void valueChange(ValueChangeEvent event) 
+    	    {
+    	    	Notification.show("Value changed:", tblSourceDestination.getValue().toString(), Type.TRAY_NOTIFICATION);
+    	    }
+    	});*/
+    	
+    	/*tblSourceDestination.addValueChangeListener(new ValueChangeListener() {
+            @Override
+            public void valueChange(final ValueChangeEvent event) 
+            {
+                Notification.show("Value changed:", tblSourceDestination.getValue().toString(), Type.TRAY_NOTIFICATION);
+            }
+        });
+   	*/
+    	// add component to the layout specifying its position on the layout
+    	layout.addComponent(btnLoad, "left:610px; top: 10px;");
+    	layout.addComponent(btnPrevious, "left: "+(leftStart+0)+"px; top: 60px;");
+    	layout.addComponent(btnNext, "left: "+(leftStart+200)+"px; top: 60px;");
+    	layout.addComponent(btnCorrect, "left: "+leftStart+"px; top: "+topStart+"px;");
+    	layout.addComponent(btnIncorrect, "left: "+(leftStart+space)+"px; top: "+topStart+"px;");
+    	layout.addComponent(btnUnsure, "left: "+(leftStart+2*space)+"px; top: "+topStart+"px;");
+    	/*layout.addComponent(sourceURI,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
+    	layout.addComponent(destinationURI,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");*/
+    	
+    	//layout.addComponent(source,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
+    	//layout.addComponent(destination,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");
+    	
+    	layout.addComponent(tblSourcePropertiesMapping,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space)+"px;");
+    	layout.addComponent(tblDestinationPropertiesMapping,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space)+"px;");
+    	layout.addComponent(tblSourceDestination,"left: 10px; top: 20px;");
+
+    	mainPanel.setContent(layout);
+    	
+    	return mainPanel;
+    }
+    
+    private List<String> getTasksInfo(String url,String db,String userName,String password,String usr) throws SQLException
+	{
+    	Connection con = null;
+		String driver = "com.mysql.jdbc.Driver";
+		List<String> info=new ArrayList<String>();
+		  try
+		  {
+			  Class.forName(driver);
+			  con = DriverManager.getConnection(url+db,userName,password);
+			  String selectStatement="SELECT Tasks.taskId FROM Users, Tasks WHERE  Users.userId=Tasks.userId AND Tasks.userId = "+usr;
+			  Statement st = con.createStatement();
+			  ResultSet linksRecords=st.executeQuery(selectStatement);
+			  
+			  while(linksRecords.next())
+			  {
+				  info.add(linksRecords.getString("taskId"));
+			  }
+		  }
+		 
+		  catch (SQLException s)
+		  {
+			  Notification.show("SQLException:", "SQL statement is not executed!\n"+s.getMessage(), Type.TRAY_NOTIFICATION);
+		  } catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  finally
+		  {
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
+		return info;
+		
+	}
+    private List<String> getLoginInfo(String url,String db,String userName,String password) throws SQLException
+	{
+    	Connection con = null;
+		String driver = "com.mysql.jdbc.Driver";
+		List<String> info=new ArrayList<String>();
+		  try
+		  {
+			  Class.forName(driver);
+			  con = DriverManager.getConnection(url+db,userName,password);
+			  String selectStatement="SELECT userId FROM Users";
+			  Statement st = con.createStatement();
+			  ResultSet linksRecords=st.executeQuery(selectStatement);
+			  
+			  while(linksRecords.next())
+			  {
+				  info.add(linksRecords.getString("userId"));
+			  }
+		  }
+		 
+		  catch (SQLException s)
+		  {
+			  //System.out.println("SQL statement is not executed!\n"+s.getMessage());
+		  } catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  finally
+		  {
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
+		return info;
+		
+	}
+    
+    private List<LinkCandidate> getLinksCandidates(String url,String db,String userName,String password) throws SQLException
+	{
+    	//JDBCConnectionPool x=new SimpleJDBCConnectionPool("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/", "hgf", "xxxxx");
+		List<LinkCandidate> infoList= new ArrayList<LinkCandidate>();
+		Connection con = null;
+		String driver = "com.mysql.jdbc.Driver";
+		  try
+		  {
+			  Class.forName(driver);
+			  con = DriverManager.getConnection(url+db,userName,password);
+			  String selectStatement="SELECT * FROM Links";
+			  Statement st = con.createStatement();
+			  ResultSet linksRecords=st.executeQuery(selectStatement);
+			  
+			  while(linksRecords.next())
+			  {
+				  //infoList.add(new LinkCandidate(linksRecords.getString("sourceURI"),linksRecords.getString("destinationURI"), linksRecords.getString("relationMapping")));
+			  }
+		  }
+		 
+		  catch (SQLException s)
+		  {
+			  //System.out.println("SQL statement is not executed!\n"+s.getMessage());
+		  } catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  finally
+		  {
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
+		return infoList;
+		
+	}
+/////inner class
+    public class LinkCandidate 
+    {
+    	public String source,destination,relation,decision,time;
+    	public LinkCandidate(String s, String d, String r,String de, String t)
+    	{
+    		source=s;
+    		destination=d;
+    		relation=r;
+    		decision=de;
+    		time=t;
+    	}
+    }
+}
+
+//////////////////////////////////////////////
+String sparqlQuery="select * where { <"+source.getValue()+"> ?p  ?o }", endpoint;
+	            Notification x= new Notification(sparqlQuery);
+		    	x.setPosition(com.vaadin.shared.Position.MIDDLE_CENTER);
+		    	try {
+					x.wait(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	Model model = ModelFactory.createDefaultModel();
+            	Query query = QueryFactory.create(sparqlQuery);
+			    QueryExecution qexec = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
+			    com.hp.hpl.jena.query.ResultSet results = qexec.execSelect();
+		     
+			    com.hp.hpl.jena.query.QuerySolution binding=null;
+			    while (results.hasNext()) 
+			    {
+			    	binding = results.next();
+			    	x= new Notification(binding.getResource("?o").toString());
+			    	x.setPosition(com.vaadin.shared.Position.MIDDLE_CENTER);
+			    	try {
+						x.wait(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					//Notification.show("Classes:", binding.getResource("?class").toString(), Type.TRAY_NOTIFICATION);
+
+					
+				    /* com.hp.hpl.jena.rdf.model.Resource newSubject=binding.getResource("s");
+				     com.hp.hpl.jena.rdf.model.Property newPredicate=null;
+			    	  try
+			    	  {
+					      newPredicate=ResourceFactory.createProperty(binding.getResource("p").getURI());
+					      model.add(newSubject, newPredicate, binding.get("o"));
+			    	  }catch (Exception e)
+			    	  {
+			    	  
+			    	  }*/
+			      }
+			     qexec.close() ;
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+package de.linkeval.web;
+
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.*;
+
+import javax.swing.plaf.SplitPaneUI;
+
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.sparql.pfunction.library.container;
+import com.vaadin.data.Container;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.sqlcontainer.RowItem;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
+//import com.mysql.jdbc.Connection;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.query.TableQuery;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.LoginForm;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.ui.Window;
+
+/*import de.steinwedel.messagebox.ButtonId;
+import de.steinwedel.messagebox.Icon;
+import de.steinwedel.messagebox.MessageBox;
+*/
+/**
+ * The Application's "main" class
+ */
+@SuppressWarnings("serial")
+public class LinkEvalUi extends UI
+{
+	
+	// Data structures declarations
+	List<LinkCandidate> infoList;
+	String UserId="",task="";
+	
+	Panel displayedPanel;
+    @Override
+    protected void init(VaadinRequest request) 
+    {
+    	
+    	displayedPanel=designLoginPanel();
+       	setContent(displayedPanel);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Panel designLoginPanel()
+    {
+    	
+    	final Panel loginPanel =new Panel("Login");
+    	List<String> users=null;
+   
+    	loginPanel.setWidth("100%");
+    	loginPanel.setHeight("100%");
+      	// Create absolute layout specifying its properties
+    	final AbsoluteLayout loginLayout= new AbsoluteLayout();
+    	loginLayout.setSizeFull();
+    	// Create components Objects and specify their properties
+    	int startLeft=200,startTop=300;
+    	try {
+			users=getLoginInfo("jdbc:mysql://localhost:3306/","linkeval","root","mofo");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       	Button btnLogin = new Button("Login"); 
+       	final ComboBox cmbUser = new ComboBox("Select your USER NAME");
+        final ComboBox cmbTask = new ComboBox("Select your TASK");
+        cmbUser.setNullSelectionAllowed(false);
+        cmbTask.setNullSelectionAllowed(false);
+        //Add data
+        
+        for (String user : users) 
+        {
+        	cmbUser.addItem(user);
+		}
+        cmbUser.setValue(cmbUser.getItemIds().iterator().next());
+        
+        //////Listeners
+
+        btnLogin.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	VerticalSplitPanel vsplit = new VerticalSplitPanel();
+            	displayedPanel=designMainPanel();
+            	vsplit.setSecondComponent(displayedPanel);
+            	vsplit.setFirstComponent(allLinksDetails());
+            	UI.getCurrent().setContent(vsplit);
+                UserId = String.valueOf(cmbUser.getValue());
+                task = String.valueOf(cmbTask.getValue());
+            }
+        });
+        
+        cmbUser.addValueChangeListener(new ValueChangeListener() {
+            @Override
+            public void valueChange(final ValueChangeEvent event) 
+            {
+                final String valueString = String.valueOf(event.getProperty().getValue());
+                Notification.show("Value changed:", valueString, Type.TRAY_NOTIFICATION);
+            
+                try {
+     				List<String>  tasks= getTasksInfo("jdbc:mysql://localhost:3306/","linkeval","root","mofo",valueString);
+     				cmbTask.removeAllItems();
+     				for (String task : tasks) 
+     				{
+     					cmbTask.addItem(task);
+     				}
+     				cmbTask.setValue(cmbTask.getItemIds().iterator().next());
+
+     			} catch (SQLException e) {
+     				// TODO Auto-generated catch block
+     				e.printStackTrace();
+     			}
+            }
+        });
+
+        loginLayout.addComponent(cmbUser, "left: 200px; top: 200px;");
+        loginLayout.addComponent(cmbTask, "left: 200px; top: 300px;");
+        loginLayout.addComponent(btnLogin, "left: 300px; top: 400px;");
+
+        loginPanel.setContent(loginLayout);
+    	
+       	return loginPanel;
+    }
+ ///////////////////////////////////////////////////////////////////////////////////////////   
+    Link sourceURI,destinationURI;
+    int record_focused=0;
+    Label source,destination;
+    
+    private Panel allLinksDetails()
+    {
+    	//positioning indices
+    	//final int leftStart=10,topStart=10, space=100;
+    	//create the panel that will hold all components
+    	Panel linksDetails = new Panel("Links Details");
+    	//set panel's properties   	
+    	linksDetails.setWidth("100%");
+    	linksDetails.setHeight("100%");
+    	
+      	// Create absolute layout specifying its properties
+    	final AbsoluteLayout layout = new AbsoluteLayout();
+    	//set layout's properties
+    	layout.setSizeFull();
+     	
+    	// Create components Objects and specify their properties
+       	Button btnLoad = new Button("Load task");
+    	final Table tblSourceDestination = new Table("Source and Destination URIs");
+     	tblSourceDestination.setSelectable(true);     	
+    	tblSourceDestination.setWidth("90%");    	
+    	//fill the Source and Destination URIs table
+    	SQLContainer container=connectToDB("root", "mofo");
+    	tblSourceDestination.setContainerDataSource(container);
+    	
+
+    	// add component to the layout specifying its position on the layout
+    	int tableWidth = (int) tblSourceDestination.getWidth();
+    	layout.addComponent(btnLoad, "left:1500px; top: 10px;");
+    	layout.addComponent(tblSourceDestination,"left: 10px; top: 20px;");
+    	
+    	linksDetails.setContent(layout);
+    	// Add EventHandlers for some of the components
+    	btnLoad.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	try
+            	{
+	            	Object rowId =tblSourceDestination.getValue();
+	                Property sourceProperty=tblSourceDestination.getContainerProperty(rowId,"sourceURI");
+	                Property destinationProperty=tblSourceDestination.getContainerProperty(rowId,"destinationURI");
+	
+	                source.setValue(sourceProperty.toString());
+	                destination.setValue(destinationProperty.toString());
+            	}
+            	catch(Exception e)
+            	{
+            		Notification error= new Notification("Error");
+            		error.show("You did not select an item in the links table");
+            	}
+
+            }
+        });
+     	return linksDetails;
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    private SQLContainer connectToDB(String userName, String passWord)
+    {
+    	SimpleJDBCConnectionPool connectionPool;  
+    	SQLContainer container=null;
+        try
+        {
+        	connectionPool = new SimpleJDBCConnectionPool("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/linkeval",userName, passWord, 2,5);
+        	TableQuery tq = new TableQuery("Links", connectionPool);
+        	container = new SQLContainer(tq);
+        }
+        catch(Exception e)
+        {
+        	Notification.show(e.getMessage());
+        }
+        return container;
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+    private Panel designMainPanel()
+    {
+    	//positioning indices
+    	final int leftStart=900,topStart=100, space=100;
+    	//create the panel that will hold all components
+    	VerticalSplitPanel vsplit = new VerticalSplitPanel();
+    	
+    	Panel mainPanel = new Panel("URI Display");
+    	   	
+    	mainPanel.setWidth("100%");
+    	mainPanel.setHeight("100%");
+    	
+      	// Create absolute layout specifying its properties
+    	final AbsoluteLayout layout = new AbsoluteLayout();
+       	layout.setWidth("100%");
+    	layout.setHeight("100%");
+    	layout.setSizeFull();
+     	
+    	// Create components Objects and specify their properties
+       	Button btnLoad = new Button("Load task");
+    	Button btnPrevious = new Button( "Previous");
+    	Button btnNext = new Button("Next");
+    	Button btnCorrect = new Button("Correct");
+    	Button btnIncorrect = new Button("Incorrect");
+    	Button btnUnsure = new Button("Unsure");
+    	Button btnGetProperties= new Button("Get properties");
+    	
+    	sourceURI = new Link("Source URI", new ExternalResource("http://vaadin.com/"));
+    	destinationURI = new Link("Destination URI", new ExternalResource("http://google.com/"));
+    	
+    	final Table tblSourcePropertiesMapping = new Table("Source Properties");
+    	final Table tblDestinationPropertiesMapping = new Table("Destination Properties");
+    	final Table tblSourceDestination = new Table("Source and Destination URIs");
+    	
+    	
+    	tblSourceDestination.setSelectable(true);
+    	tblSourceDestination.setWidth("50%");    	
+    	source= new Label("Source URI");
+    	destination= new Label("Destination URI");
+
+    	/* Define the names and data types of columns.
+    	 * The "default value" parameter is meaningless here. */
+    	tblSourcePropertiesMapping.addContainerProperty("Property", String.class,  null);
+    	tblSourcePropertiesMapping.addContainerProperty("Value",  String.class,  null);
+
+    	tblDestinationPropertiesMapping.addContainerProperty("Property",  String.class,  null);
+    	tblDestinationPropertiesMapping.addContainerProperty("Value",  String.class,  null);
+    	
+    	tblSourceDestination.addContainerProperty("Source URI",  String.class,  null);
+    	tblSourceDestination.addContainerProperty("Destination URI",  String.class,  null);
+    	
+    	/* Add a few items in the table. */
+    	tblSourcePropertiesMapping.addItem(new Object[] {
+    	    "Nicolaus","Copernicus"}, new Integer(1));
+    	tblSourcePropertiesMapping.addItem(new Object[] {
+    	    "Nicolaus",   "Copernicus"}, new Integer(2));
+    	
+    	tblDestinationPropertiesMapping.addItem(new Object[] {
+        	    "Tycho",   "Brahe"}, new Integer(1));
+    	tblDestinationPropertiesMapping.addItem(new Object[] {
+        	    "Tycho",   "Brahe"}, new Integer(2));
+    	
+    	
+    	
+    	//////////////////////////////////////////////////////////////////////
+    	/*for (int i = 0; i < container.size(); i++) {
+    	    Object id = container.getIdByIndex(i);
+    	    Item item = container.getItem(id);
+    	    // do stuff with item
+    	}*/
+    	//fill the Source and Destination URIs table
+    	SimpleJDBCConnectionPool connectionPool;    
+        try
+        {
+        	connectionPool = new SimpleJDBCConnectionPool("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/linkeval",
+                    "root", "mofo", 2,5);
+        	TableQuery tq = new TableQuery("Links", connectionPool);
+        	SQLContainer container = new SQLContainer(tq);
+        	tblSourceDestination.setContainerDataSource(container);
+        }
+        catch(Exception e)
+        {
+        	
+        }
+
+    	// Add eventhandlers for some of the componenets
+    	btnLoad.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+                //Notification.show("Value changed:", tblSourceDestination.getValue().toString(), Type.TRAY_NOTIFICATION);
+            	Object rowId =tblSourceDestination.getValue();
+                Property sourceProperty=tblSourceDestination.getContainerProperty(rowId,"sourceURI");
+                Property destinationProperty=tblSourceDestination.getContainerProperty(rowId,"destinationURI");
+
+                source.setValue(sourceProperty.toString());
+                destination.setValue(destinationProperty.toString());
+
+            }
+        });
+   	
+    	btnNext.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	if(record_focused < infoList.size())
+            	{
+	            	sourceURI = new Link(infoList.get(record_focused).source, new ExternalResource(infoList.get(record_focused).source));
+	            	destinationURI = new Link(infoList.get(record_focused).destination, new ExternalResource(infoList.get(record_focused).destination));
+	            	layout.removeComponent(source);
+                	layout.removeComponent(destination);
+                	source.setValue(infoList.get(record_focused).source);
+                	destination.setValue(infoList.get(record_focused).destination);
+	            	layout.addComponent(source,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
+	            	layout.addComponent(destination,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");
+	            	record_focused++;
+            	}                
+            }
+        });
+    	btnPrevious.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	if(record_focused > 0)
+            	{
+	            	record_focused--;
+	            	/*sourceURI = new Link(infoList.get(record_focused).source, new ExternalResource(infoList.get(record_focused).source));
+	            	destinationURI = new Link(infoList.get(record_focused).destination, new ExternalResource(infoList.get(record_focused).destination));
+	            	layout.removeComponent(source);
+                	layout.removeComponent(destination);*/
+                	source.setValue(infoList.get(record_focused).source);
+                	destination.setValue(infoList.get(record_focused).destination);
+	            	/*layout.addComponent(source,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
+	            	layout.addComponent(destination,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");*/
+            	}
+            }
+        });
+    	btnCorrect.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	Object rowId =tblSourceDestination.getValue();
+            	Item myitem = tblSourceDestination.getItem(tblSourceDestination.getValue());
+            	tblSourceDestination.setEditable(true);
+            	tblSourceDestination.getContainerProperty(rowId, "decision").setValue("Correct"); 
+            	tblSourceDestination.setEditable(false);
+            	SQLContainer c =(SQLContainer) tblSourceDestination.getContainerDataSource();
+            	try {
+					c.commit();
+				} catch (UnsupportedOperationException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	/*SQLContainer c =(SQLContainer) tblSourceDestination.getContainerDataSource();
+            	Item item= c.getItem(rowId);
+            	Notification.show("till now it is ok");
+            	item.getItemProperty("DECISION").setValue("how");
+            	item.getItemProperty("xc").*/
+            	//RowItem item= c.getItem(rowId);
+            	//c.setAutoCommit(false);
+            	//tblSourceDestination.addItem(new Object[] {3, "newS", "newD", "Rel", "Dec", "T" ,"1"},rowId);
+            	//Item i=c.getItem(rowId);
+            	
+            	/*Object rowId =tblSourceDestination.getValue();
+            	Container c =tblSourceDestination.getContainerDataSource();
+            	Item i=c.getItem(rowId);
+                Property sourceProperty=tblSourceDestination.setContainerProperty(rowId,"sourceURI");*/
+            }
+        });
+    	btnGetProperties.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {	try
+	    	  	{
+	            	String sparqlQuery=source.getValue();		        
+		            getURIProperties(sparqlQuery,"http://dbpedia.org/sparql",tblSourcePropertiesMapping);
+		            sparqlQuery=destination.getValue();		        
+		            getURIProperties(sparqlQuery,"http://dbpedia.org/sparql",tblDestinationPropertiesMapping);
+	    	  	}
+            	catch(Exception e){Notification.show("ERROR");}
+            }
+        });
+    	// add component to the layout specifying its position on the layout
+    	layout.addComponent(btnLoad, "left:610px; top: 10px;");
+    	layout.addComponent(btnPrevious, "left: "+(leftStart+0)+"px; top: 60px;");
+    	layout.addComponent(btnNext, "left: "+(leftStart+200)+"px; top: 60px;");
+    	layout.addComponent(btnCorrect, "left: "+leftStart+"px; top: "+topStart+"px;");
+    	layout.addComponent(btnIncorrect, "left: "+(leftStart+space)+"px; top: "+topStart+"px;");
+    	layout.addComponent(btnUnsure, "left: "+(leftStart+2*space)+"px; top: "+topStart+"px;"); 
+    	layout.addComponent(btnGetProperties, "left: "+(leftStart+3*space)+"px; top: "+topStart+"px;");
+    	/*layout.addComponent(sourceURI,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
+    	layout.addComponent(destinationURI,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");*/
+    	
+    	layout.addComponent(source,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
+    	layout.addComponent(destination,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");
+    	
+    	layout.addComponent(tblSourcePropertiesMapping,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space)+"px;");
+    	layout.addComponent(tblDestinationPropertiesMapping,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space)+"px;");
+    	layout.addComponent(tblSourceDestination,"left: 10px; top: 20px;");
+
+    	mainPanel.setContent(layout);
+    	
+    	return mainPanel;
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void getURIProperties(String subject,String endpoint, Table table)
+    {
+    	/*IndexedContainer container= new IndexedContainer();
+    	Item item =container.addItem(container.addItem());*/
+    	
+    	try
+    	{
+        	String sparqlQuery="select * where { <"+subject+"> ?p  ?o }";
+	        Query query = QueryFactory.create(sparqlQuery);
+			QueryExecution qexec = QueryExecutionFactory.sparqlService(endpoint, query);
+			com.hp.hpl.jena.query.ResultSet results = qexec.execSelect();
+			com.hp.hpl.jena.query.QuerySolution binding=null;
+		    while (results.hasNext()) 
+		    {
+		    	binding = results.next();
+		    	String property=binding.getResource("?p").toString();
+		    	String value=binding.getResource("?o").toString();
+		    	table.addItem(new Object[] {property,value}, new Integer(table.size()+1));
+		    	Notification.show(property);
+
+		    }
+		    qexec.close() ;
+    	}
+    	catch (Exception e)
+	 	  {
+		        Notification.show("Error2");
+	 	  }
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private List<String> getTasksInfo(String url,String db,String userName,String password,String usr) throws SQLException
+	{
+    	Connection con = null;
+		String driver = "com.mysql.jdbc.Driver";
+		List<String> info=new ArrayList<String>();
+		  try
+		  {
+			  Class.forName(driver);
+			  con = DriverManager.getConnection(url+db,userName,password);
+			  String selectStatement="SELECT Tasks.taskId FROM Users, Tasks WHERE  Users.userId=Tasks.userId AND Tasks.userId = "+usr;
+			  Statement st = con.createStatement();
+			  ResultSet linksRecords=st.executeQuery(selectStatement);
+			  
+			  while(linksRecords.next())
+			  {
+				  info.add(linksRecords.getString("taskId"));
+			  }
+		  }
+		 
+		  catch (SQLException s)
+		  {
+			  Notification.show("SQLException:", "SQL statement is not executed!\n"+s.getMessage(), Type.TRAY_NOTIFICATION);
+		  } catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  finally
+		  {
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
+		return info;
+		
+	}
+    //////////////////////////////////////////////////////////////////////////////////
+    private List<String> getLoginInfo(String url,String db,String userName,String password) throws SQLException
+	{
+    	Connection con = null;
+		String driver = "com.mysql.jdbc.Driver";
+		List<String> info=new ArrayList<String>();
+		  try
+		  {
+			  Class.forName(driver);
+			  con = DriverManager.getConnection(url+db,userName,password);
+			  String selectStatement="SELECT userId FROM Users";
+			  Statement st = con.createStatement();
+			  ResultSet linksRecords=st.executeQuery(selectStatement);
+			  
+			  while(linksRecords.next())
+			  {
+				  info.add(linksRecords.getString("userId"));
+			  }
+		  }
+		 
+		  catch (SQLException s)
+		  {
+			  //System.out.println("SQL statement is not executed!\n"+s.getMessage());
+		  } catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  finally
+		  {
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
+		return info;
+		
+	}
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    private List<LinkCandidate> getLinksCandidates(String url,String db,String userName,String password) throws SQLException
+	{
+    	//JDBCConnectionPool x=new SimpleJDBCConnectionPool("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/", "hgf", "xxxxx");
+		List<LinkCandidate> infoList= new ArrayList<LinkCandidate>();
+		Connection con = null;
+		String driver = "com.mysql.jdbc.Driver";
+		  try
+		  {
+			  Class.forName(driver);
+			  con = DriverManager.getConnection(url+db,userName,password);
+			  String selectStatement="SELECT * FROM Links";
+			  Statement st = con.createStatement();
+			  ResultSet linksRecords=st.executeQuery(selectStatement);
+			  
+			  while(linksRecords.next())
+			  {
+				  //infoList.add(new LinkCandidate(linksRecords.getString("sourceURI"),linksRecords.getString("destinationURI"), linksRecords.getString("relationMapping")));
+			  }
+		  }
+		 
+		  catch (SQLException s)
+		  {
+			  
+		  } catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  finally
+		  {
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
+		return infoList;
+		
+	}
+/////inner class
+    public class LinkCandidate 
+    {
+    	public String source,destination,relation,decision,time;
+    	public LinkCandidate(String s, String d, String r,String de, String t)
+    	{
+    		source=s;
+    		destination=d;
+    		relation=r;
+    		decision=de;
+    		time=t;
+    	}
+    	@Override
+    	public String toString() 
+    	{
+    		String info= source+":"+ destination+":"+relation+":"+decision+":"+time;
+    		return info;
+    	}
+    }
+}
+
+
+
+source.setContentMode(ContentMode.HTML);
+    	source.setValue("<b>helooooo</b>");
+    	
+    	
+  // If the checkbox is selected.
+                    if ((Boolean)button.getValue() == true) {
+                        // Do something with the selected item; collect the
+                        // first names in a string.
+                        items += item.getItemProperty("First Name")
+                                     .getValue() + " ";
+        
+  
+  
+  package de.linkeval.web;
+
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.sql.*;
+
+import javax.swing.plaf.SplitPaneUI;
+
+
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.sparql.pfunction.library.container;
+import com.vaadin.data.Container;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.filter.Compare;
+import com.vaadin.data.util.sqlcontainer.RowItem;
+import com.vaadin.data.util.sqlcontainer.SQLContainer;
+//import com.mysql.jdbc.Connection;
+import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
+import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
+import com.vaadin.data.util.sqlcontainer.query.TableQuery;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.LoginForm;
+import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.ui.Window;
+
+/*import de.steinwedel.messagebox.ButtonId;
+import de.steinwedel.messagebox.Icon;
+import de.steinwedel.messagebox.MessageBox;
+*/
+/**
+ * The Application's "main" class
+ */
+@SuppressWarnings("serial")
+public class LinkEvalUi extends UI
+{
+	
+	// Data structures declarations
+	List<LinkCandidate> infoList;
+	String UserId="",task="";
+	
+	Panel displayedPanel;
+    @Override
+    protected void init(VaadinRequest request) 
+    {
+    	
+    	displayedPanel=designLoginPanel();
+       	setContent(displayedPanel);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Panel designLoginPanel()
+    {
+    	
+    	final Panel loginPanel =new Panel("Login");
+    	List<String> users=null;
+   
+    	loginPanel.setWidth("100%");
+    	loginPanel.setHeight("100%");
+      	// Create absolute layout specifying its properties
+    	final AbsoluteLayout loginLayout= new AbsoluteLayout();
+    	loginLayout.setSizeFull();
+    	// Create components Objects and specify their properties
+    	int startLeft=200,startTop=300;
+    	try {
+			users=getLoginInfo("jdbc:mysql://localhost:3306/","linkeval","root","mofo");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       	Button btnLogin = new Button("Login"); 
+       	final ComboBox cmbUser = new ComboBox("Select your USER ID");
+        final ComboBox cmbTask = new ComboBox("Select your TASK");
+        cmbUser.setNullSelectionAllowed(false);
+        cmbTask.setNullSelectionAllowed(false);
+        //Add data
+        
+        for (String user : users) 
+        {
+        	cmbUser.addItem(user);
+		}
+        cmbUser.setValue(cmbUser.getItemIds().iterator().next());
+        
+        //////Listeners
+
+        btnLogin.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	UserId = String.valueOf(cmbUser.getValue());
+                task = String.valueOf(cmbTask.getValue());
+                if(task != "" && UserId != "" )
+                {
+	            	VerticalSplitPanel vsplit = new VerticalSplitPanel();
+	            	displayedPanel=designMainPanel();
+	            	vsplit.setSecondComponent(displayedPanel);
+	            	vsplit.setFirstComponent(allLinksDetails());
+	            	UI.getCurrent().setContent(vsplit);
+                }
+            }
+        });
+        
+        cmbUser.addValueChangeListener(new ValueChangeListener() {
+            @Override
+            public void valueChange(final ValueChangeEvent event) 
+            {
+                final String valueString = String.valueOf(event.getProperty().getValue());
+         
+                try {
+     				List<String>  tasks= getTasksInfo("jdbc:mysql://localhost:3306/","linkeval","root","mofo",valueString);
+     				cmbTask.removeAllItems();
+     				for (String task : tasks) 
+     				{
+     					cmbTask.addItem(task);
+     				}
+     				cmbTask.setValue(cmbTask.getItemIds().iterator().next());
+
+     			} catch (SQLException e) {
+     				// TODO Auto-generated catch block
+     				e.printStackTrace();
+     			}
+            }
+        });
+
+        loginLayout.addComponent(cmbUser, "left: 800px; top: 200px;");
+        loginLayout.addComponent(cmbTask, "left: 800px; top: 300px;");
+        loginLayout.addComponent(btnLogin, "left: 900px; top: 400px;");
+
+        loginPanel.setContent(loginLayout);
+    	
+       	return loginPanel;
+    }
+ ///////////////////////////////////////////////////////////////////////////////////////////   
+   
+    Label source,destination;
+    Table tblSourceDestinationparam,tblSourcePropertiesParam,tblDestinationPropertiesParam; //pass tables between different panels
+    long lStartTime =0;
+	long lEndTime=0; 
+	boolean newLink=true;
+
+    private Panel allLinksDetails()
+    {
+    	//positioning indices
+    	//final int leftStart=10,topStart=10, space=100;
+    	//create the panel that will hold all components
+    	Panel linksDetails = new Panel("Links Details");
+    	//set panel's properties   	
+    	linksDetails.setWidth("100%");
+    	linksDetails.setHeight("100%");
+    	
+      	// Create absolute layout specifying its properties
+    	final AbsoluteLayout layout = new AbsoluteLayout();
+    	//set layout's properties
+    	layout.setSizeFull();
+     	
+    	// Create components Objects and specify their properties
+       	Button btnLoad = new Button("Load task");
+    	final Table tblSourceDestination = new Table("Source and Destination URIs");
+     	tblSourceDestination.setSelectable(true);     	
+    	tblSourceDestination.setWidth("90%");    	
+    	//fill the Source and Destination URIs table
+    	SQLContainer container=connectToDB("root", "mofo","Links");
+    	Notification.show(task);
+    	Compare.Equal suburbFilter = new Compare.Equal("taskId",Integer.valueOf(task));
+    	container.addContainerFilter(suburbFilter);
+    	tblSourceDestination.setContainerDataSource(container);
+    	tblSourceDestinationparam=tblSourceDestination;
+    	
+    	// add component to the layout specifying its position on the layout
+    	int tableWidth = (int) tblSourceDestination.getWidth();
+    	layout.addComponent(btnLoad, "left:1500px; top: 10px;");
+    	layout.addComponent(tblSourceDestination,"left: 10px; top: 20px;");
+    	
+    	linksDetails.setContent(layout);
+    	// Add EventHandlers for some of the components
+    	
+    	
+    	btnLoad.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+           		lStartTime= System.currentTimeMillis();
+        
+            	try
+            	{
+	            	Object rowId =tblSourceDestination.getValue();
+	                Property sourceProperty=tblSourceDestination.getContainerProperty(rowId,"sourceURI");
+	                Property destinationProperty=tblSourceDestination.getContainerProperty(rowId,"destinationURI");
+	                
+	                source.setValue(sourceProperty.toString());
+	                destination.setValue(destinationProperty.toString());
+	                tblSourcePropertiesParam.removeAllItems();
+	                tblDestinationPropertiesParam.removeAllItems();
+	                
+	                
+	                Notification loadURI= new Notification("");
+	                loadURI.show("Links' URIs are successfully loaded ");
+            	}
+            	catch(Exception e)
+            	{
+            		Notification error= new Notification("Error");
+            		error.show("You did not select an item in the links table");
+            	}
+
+            }
+        });
+     	return linksDetails;
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    private SQLContainer connectToDB(String userName, String passWord, String table)
+    {
+    	SimpleJDBCConnectionPool connectionPool;  
+    	SQLContainer container=null;
+        try
+        {
+        	connectionPool = new SimpleJDBCConnectionPool("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/linkeval",userName, passWord, 2,7);
+        	TableQuery tq = new TableQuery(table, connectionPool);
+        	container = new SQLContainer(tq);
+        }
+        catch(Exception e)
+        {
+        	Notification.show(e.getMessage());
+        }
+        return container;
+    }
+    private SQLContainer connectToDB(String userName, String passWord)
+    {//has problems
+    	SimpleJDBCConnectionPool connectionPool;  
+    	SQLContainer container=null;
+        try
+        {
+        	connectionPool = new SimpleJDBCConnectionPool("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/linkeval",userName, passWord, 2,7);
+        	FreeformQuery query = new FreeformQuery("SELECT endpoint FROM Endpoints", connectionPool);
+        	container = new SQLContainer(query);
+        }
+        catch(Exception e)
+        {
+        	Notification.show(e.getMessage());
+        }
+        return container;
+    }
+    
+    
+    
+    
+    //////////////////////////////////////////////////////////////////////////////////////////
+    private Panel designMainPanel()
+    {
+    	//positioning indices
+    	final int leftStart=400,topStart=10, space=100;
+    	//create the panel that will hold all components
+    	
+    	Panel pnlURIsProperties = new Panel("URI Display");
+    	   	
+    	pnlURIsProperties.setWidth("100%");
+    	pnlURIsProperties.setHeight("100%");
+    	
+      	// Create absolute layout specifying its properties
+    	final AbsoluteLayout layout = new AbsoluteLayout();
+       	layout.setWidth("100%");
+    	layout.setHeight("100%");
+    	layout.setSizeFull();
+     	
+    	// Create components Objects and specify their properties
+       	
+    	Button btnCorrect = new Button("Correct");
+    	Button btnIncorrect = new Button("Incorrect");
+    	Button btnUnsure = new Button("Unsure");
+    	Button btnGetProperties= new Button("Get properties");
+    	
+    	final NativeSelect cmbSourceEndpoint= new NativeSelect("Source Endpoint");
+    	final NativeSelect cmbDestinationEndpoint= new NativeSelect("Destination Endpoint");
+    	cmbSourceEndpoint.setNullSelectionAllowed(false);
+    	cmbDestinationEndpoint.setNullSelectionAllowed(false);
+
+    	source= new Label("Source URI");
+    	destination= new Label("Destination URI");
+    	
+    	final Table tblSourcePropertiesMapping = new Table("Source Properties");
+    	final Table tblDestinationPropertiesMapping = new Table("Destination Properties");
+    	tblSourcePropertiesParam=tblSourcePropertiesMapping;
+    	tblDestinationPropertiesParam=tblDestinationPropertiesMapping;
+    	
+    	tblSourcePropertiesMapping.setWidth("50%");    	
+    	tblDestinationPropertiesMapping.setWidth("100%");  
+    	tblSourcePropertiesMapping.setSelectable(true);
+    	tblDestinationPropertiesMapping.setSelectable(true);
+    	/* Define the names and data types of columns.
+    	 * The "default value" parameter is meaningless here. */
+    	tblSourcePropertiesMapping.addContainerProperty("Property", String.class,  null);
+    	tblSourcePropertiesMapping.addContainerProperty("Value",  String.class,  null);
+
+    	tblDestinationPropertiesMapping.addContainerProperty("Property",  String.class,  null);
+    	tblDestinationPropertiesMapping.addContainerProperty("Value",  String.class,  null);
+    	///get data for comboboxes
+    	SQLContainer cmbContainer= connectToDB("root", "mofo","Endpoints");
+    	
+
+		cmbSourceEndpoint.setContainerDataSource(cmbContainer);
+    	cmbDestinationEndpoint.setContainerDataSource(cmbContainer);   	
+    	
+    	cmbSourceEndpoint.setValue(cmbSourceEndpoint.getItemIds().iterator().next());
+    	cmbDestinationEndpoint.setValue(cmbDestinationEndpoint.getItemIds().iterator().next());
+
+    	btnCorrect.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	Object rowId =tblSourceDestinationparam.getValue();
+            	Item myitem = tblSourceDestinationparam.getItem(tblSourceDestinationparam.getValue());
+            	lEndTime = System.currentTimeMillis();
+            	long lEllapsedTime=lEndTime-lStartTime;
+            	tblSourceDestinationparam.setEditable(true);
+            	tblSourceDestinationparam.getContainerProperty(rowId, "decision").setValue("Correct"); 
+            	tblSourceDestinationparam.getContainerProperty(rowId, "time").setValue(String.valueOf(lEllapsedTime)); 
+
+            	tblSourceDestinationparam.setEditable(false);
+            	SQLContainer c =(SQLContainer) tblSourceDestinationparam.getContainerDataSource();
+            	try {
+					c.commit();
+				} catch (UnsupportedOperationException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+             }
+        });
+    	btnIncorrect.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	Object rowId =tblSourceDestinationparam.getValue();
+            	Item myitem = tblSourceDestinationparam.getItem(tblSourceDestinationparam.getValue());
+            	lEndTime = System.currentTimeMillis();
+            	long lEllapsedTime=lEndTime-lStartTime;
+            	tblSourceDestinationparam.setEditable(true);
+            	tblSourceDestinationparam.getContainerProperty(rowId, "decision").setValue("Incorrect");
+            	tblSourceDestinationparam.getContainerProperty(rowId, "time").setValue(String.valueOf(lEllapsedTime)); 
+            	tblSourceDestinationparam.setEditable(false);
+            	SQLContainer c =(SQLContainer) tblSourceDestinationparam.getContainerDataSource();
+            	try {
+					c.commit();
+				} catch (UnsupportedOperationException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+             }
+        });
+    	btnUnsure.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+             	Object rowId =tblSourceDestinationparam.getValue();
+            	Item myitem = tblSourceDestinationparam.getItem(tblSourceDestinationparam.getValue());
+            	lEndTime = System.currentTimeMillis();
+            	float lEllapsedTime=lEndTime-lStartTime;
+            	String elapsedTime= String.valueOf(lEllapsedTime);
+            	tblSourceDestinationparam.setEditable(true);
+            	tblSourceDestinationparam.getContainerProperty(rowId, "decision").setValue("Unsure"); 
+            	tblSourceDestinationparam.getContainerProperty(rowId, "time").setValue(elapsedTime);
+            	tblSourceDestinationparam.setEditable(false);
+            	SQLContainer c =(SQLContainer) tblSourceDestinationparam.getContainerDataSource();
+            	try {
+					c.commit();
+				} catch (UnsupportedOperationException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+             }
+        });
+    	btnGetProperties.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	String sourceEndpoint="",destinationEndpoint="";
+            	sourceEndpoint=cmbSourceEndpoint.getItemCaption(cmbSourceEndpoint.getValue());
+            	destinationEndpoint=cmbDestinationEndpoint.getItemCaption(cmbDestinationEndpoint.getValue());
+
+            	try
+	    	  	{
+            		String sparqlQuery=source.getValue();		        
+		            getURIProperties(sparqlQuery,sourceEndpoint,tblSourcePropertiesMapping);
+		            sparqlQuery=destination.getValue();		        
+		            getURIProperties(sparqlQuery,destinationEndpoint,tblDestinationPropertiesMapping);
+	    	  	}
+            	catch(Exception e){Notification.show("ERROR");}
+            }
+        });
+    	
+    	
+    	tblSourcePropertiesMapping.addItemClickListener(new ItemClickEvent.ItemClickListener() {
+
+            public void itemClick(ItemClickEvent event) 
+            {
+            	String property=tblSourcePropertiesMapping.getContainerProperty(event.getItemId(), event.getPropertyId()).toString();
+                Notification.show(property);
+            	/*Object rowId =tblSourcePropertiesMapping.getValue();
+                Notification.show(rowId.toString());
+*/
+               // Property sourceProperty=tblSourcePropertiesMapping.getContainerProperty(rowId,"Property");
+                //Notification.show(sourceProperty.toString());
+                String selectQuery="select property from Properties where Id in " +
+            			"(select secondProperty from propertyMappings where firstProperty = " +
+            			"(select Id from Properties Where property =\""+property+"\"))";
+                for (Iterator i = tblDestinationPropertiesMapping.getItemIds().iterator(); i.hasNext();) 
+                {
+                    // Get the current item identifier, which is an integer.
+                    int iid = (Integer) i.next();
+                    String other=tblDestinationPropertiesMapping.getItem(iid).getItemProperty(event.getPropertyId()).toString();
+                	
+                    if(other.equals(property))
+                    {
+                    	Notification.show("EQUAL");
+                    	tblDestinationPropertiesMapping.setValue(iid);
+                    	Notification.show("Selected");
+
+                    	break;
+                    }
+                    // Now get the actual item from the table.
+                    /*Item item = tblDestinationPropertiesMapping.getItem(iid);
+                    tblDestinationPropertiesMapping.setValue(tblDestinationPropertiesMapping.f)*/
+                   // item.setItemProperty(event.getPropertyId()).setValue();
+                    
+                  
+                    
+                }
+                 
+            /*	Connection con = null;
+        		String url = "jdbc:mysql://localhost:3306/";
+        		String db = "linkeval";        
+        		String driver = "com.mysql.jdbc.Driver";
+        		
+        		  try
+        		  {
+        			  try {
+						Class.forName(driver);
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+        			  con = DriverManager.getConnection("jdbc:mysql://localhost:3306/linkeval","root","mofo");
+        			  Statement st = con.createStatement();
+        			  ResultSet linksRecords=st.executeQuery(selectQuery);
+        			  //create the file to be the backup named after current date
+     			  
+        			  String linkRecord;
+        			  while(linksRecords.next())
+        			  {
+        				  linkRecord=linksRecords.getString("property");
+        				  Notification.show(linkRecord);
+        			  }
+        		  }
+          		 
+        		  catch (SQLException s)
+        		  {
+        			  System.out.println("SQL statement is not executed!\n"+s.getMessage());
+        		  }
+        		  finally
+        		  {
+        			  try {
+						con.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+        		  }*/
+            	
+               /* try
+                {
+                	connectionPool = new SimpleJDBCConnectionPool("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/linkeval","root", "mofo", 2,7);
+                	FreeformQuery query = new FreeformQuery(selectQuery,connectionPool , "mappingsId");
+                	container = new SQLContainer(query);
+                	ResultSet res=query.getResults(0, 10);
+                	Property property = tblSourcePropertiesMapping.getContainerProperty(event.getItemId(), "Property");
+                    Object value = (null != property) ? property.getValue() : null;
+                	while(res.next())
+                	{
+                		Notification.show(res.getString(1),Notification.Type.HUMANIZED_MESSAGE);
+                	}
+
+                }
+                catch(Exception e)
+                {
+                	Notification.show(e.getMessage());
+                }*/
+                
+            }
+        });
+    	// add component to the layout specifying its position on the layout
+    	
+    	layout.addComponent(btnCorrect, "left: "+leftStart+"px; top: "+topStart+"px;");
+    	layout.addComponent(btnIncorrect, "left: "+(leftStart+space)+"px; top: "+topStart+"px;");
+    	layout.addComponent(btnUnsure, "left: "+(leftStart+2*space)+"px; top: "+topStart+"px;"); 
+    	layout.addComponent(btnGetProperties, "left: "+(leftStart+3*space)+"px; top: "+topStart+"px;");
+    	/*layout.addComponent(sourceURI,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
+    	layout.addComponent(destinationURI,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");*/
+    	
+    	layout.addComponent(source,"left: 30px; top: "+(topStart+space/2)+"px;");
+    	layout.addComponent(destination,"left: "+(leftStart+3*space+200)+"px; top: "+(topStart+space/2)+"px;");
+    	
+    	layout.addComponent(cmbSourceEndpoint,"left: 250px; top: "+(topStart+space/2)+"px;");
+    	layout.addComponent(cmbDestinationEndpoint,"left: "+(leftStart+3*space+400)+"px; top: "+(topStart+space/2)+"px;");
+
+    	
+    	
+    	layout.addComponent(tblSourcePropertiesMapping,"left: 10px; top: "+(topStart+space)+"px;");
+    	layout.addComponent(tblDestinationPropertiesMapping,"left: "+(leftStart+3*space+200)+"px; top: "+(topStart+space)+"px;");
+    	
+    	
+
+    	pnlURIsProperties.setContent(layout);
+    	
+    	return pnlURIsProperties;
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void getURIProperties(String subject,String endpoint, Table table)
+    {
+    	
+    	try
+    	{
+        	String sparqlQuery="select * where { <"+subject+"> ?p  ?o }";
+	        Query query = QueryFactory.create(sparqlQuery);
+			QueryExecution qexec = QueryExecutionFactory.sparqlService(endpoint, query);
+			com.hp.hpl.jena.query.ResultSet results = qexec.execSelect();
+			com.hp.hpl.jena.query.QuerySolution binding=null;
+			table.removeAllItems();
+		    while (results.hasNext()) 
+		    {
+		    	binding = results.next();
+		    	String property=binding.getResource("?p").toString();
+		    	String value;
+		    	if(binding.get("?o").isResource())
+		    		value=binding.getResource("?o").toString();
+		    	else
+		    		value=binding.getLiteral("?o").toString();
+		    	table.addItem(new Object[] {property,value}, new Integer(table.size()+1));
+		    }
+		    qexec.close() ;
+    	}
+    	catch (Exception e)
+	 	  {
+		        Notification.show(e.toString());
+	 	  }
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private List<String> getTasksInfo(String url,String db,String userName,String password,String usr) throws SQLException
+	{
+    	Connection con = null;
+		String driver = "com.mysql.jdbc.Driver";
+		List<String> info=new ArrayList<String>();
+		  try
+		  {
+			  Class.forName(driver);
+			  con = DriverManager.getConnection(url+db,userName,password);
+			  String selectStatement="SELECT Tasks.taskId FROM Users, Tasks WHERE  Users.userId=Tasks.userId AND Tasks.userId = "+usr;
+			  Statement st = con.createStatement();
+			  ResultSet linksRecords=st.executeQuery(selectStatement);
+			  
+			  while(linksRecords.next())
+			  {
+				  info.add(linksRecords.getString("taskId"));
+			  }
+		  }
+		 
+		  catch (SQLException s)
+		  {
+			  Notification.show("SQLException:", "SQL statement is not executed!\n"+s.getMessage(), Type.TRAY_NOTIFICATION);
+		  } catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  finally
+		  {
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
+		return info;
+		
+	}
+    //////////////////////////////////////////////////////////////////////////////////
+    private List<String> getLoginInfo(String url,String db,String userName,String password) throws SQLException
+	{
+    	Connection con = null;
+		String driver = "com.mysql.jdbc.Driver";
+		List<String> info=new ArrayList<String>();
+		  try
+		  {
+			  Class.forName(driver);
+			  con = DriverManager.getConnection(url+db,userName,password);
+			  String selectStatement="SELECT userId FROM Users";
+			  Statement st = con.createStatement();
+			  ResultSet linksRecords=st.executeQuery(selectStatement);
+			  
+			  while(linksRecords.next())
+			  {
+				  info.add(linksRecords.getString("userId"));
+			  }
+		  }
+		 
+		  catch (SQLException s)
+		  {
+			  //System.out.println("SQL statement is not executed!\n"+s.getMessage());
+		  } catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  finally
+		  {
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
+		return info;
+		
+	}
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    private List<LinkCandidate> getLinksCandidates(String url,String db,String userName,String password) throws SQLException
+	{
+    	//JDBCConnectionPool x=new SimpleJDBCConnectionPool("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/", "hgf", "xxxxx");
+		List<LinkCandidate> infoList= new ArrayList<LinkCandidate>();
+		Connection con = null;
+		String driver = "com.mysql.jdbc.Driver";
+		  try
+		  {
+			  Class.forName(driver);
+			  con = DriverManager.getConnection(url+db,userName,password);
+			  String selectStatement="SELECT * FROM Links";
+			  Statement st = con.createStatement();
+			  ResultSet linksRecords=st.executeQuery(selectStatement);
+			  
+			  while(linksRecords.next())
+			  {
+				  //infoList.add(new LinkCandidate(linksRecords.getString("sourceURI"),linksRecords.getString("destinationURI"), linksRecords.getString("relationMapping")));
+			  }
+		  }
+		 
+		  catch (SQLException s)
+		  {
+			  
+		  } catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  finally
+		  {
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
+		return infoList;
+		
+	}
+/////inner class
+    public class LinkCandidate 
+    {
+    	public String source,destination,relation,decision,time;
+    	public LinkCandidate(String s, String d, String r,String de, String t)
+    	{
+    		source=s;
+    		destination=d;
+    		relation=r;
+    		decision=de;
+    		time=t;
+    	}
+    	@Override
+    	public String toString() 
+    	{
+    		String info= source+":"+ destination+":"+relation+":"+decision+":"+time;
+    		return info;
+    	}
+    }
+}
+///////////////////////login//////////////
+final Panel loginPanel =new Panel("Login");
+    	List<String> users=null;
+   
+    	loginPanel.setWidth("100%");
+    	loginPanel.setHeight("100%");
+      	// Create absolute layout specifying its properties
+    	final AbsoluteLayout loginLayout= new AbsoluteLayout();
+    	loginLayout.setSizeFull();
+    	// Create components Objects and specify their properties
+    	int startLeft=200,startTop=300;
+    	try {
+			users=getLoginInfo("jdbc:mysql://localhost:3306/","linkeval","root","mofo");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       	Button btnLogin = new Button("Login"); 
+       	final ComboBox cmbUser = new ComboBox("Select your USER ID");
+        final ComboBox cmbTask = new ComboBox("Select your TASK");
+        cmbUser.setNullSelectionAllowed(false);
+        cmbTask.setNullSelectionAllowed(false);
+        //Add data
+        
+        for (String user : users) 
+        {
+        	cmbUser.addItem(user);
+		}
+        cmbUser.setValue(cmbUser.getItemIds().iterator().next());
+        
+        //////Listeners
+
+        btnLogin.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(ClickEvent event) 
+            {
+            	UserId = String.valueOf(cmbUser.getValue());
+                task = String.valueOf(cmbTask.getValue());
+                if(task != "" && UserId != "" )
+                {
+	            	VerticalSplitPanel vsplit = new VerticalSplitPanel();
+	            	displayedPanel=designMainPanel();
+	            	vsplit.setSecondComponent(displayedPanel);
+	            	vsplit.setFirstComponent(allLinksDetails());
+	            	UI.getCurrent().setContent(vsplit);
+                }
+            }
+        });
+        
+        cmbUser.addValueChangeListener(new ValueChangeListener() {
+            @Override
+            public void valueChange(final ValueChangeEvent event) 
+            {
+                final String valueString = String.valueOf(event.getProperty().getValue());
+         
+                try {
+     				List<String>  tasks= getTasksInfo("jdbc:mysql://localhost:3306/","linkeval","root","mofo",valueString);
+     				cmbTask.removeAllItems();
+     				for (String task : tasks) 
+     				{
+     					cmbTask.addItem(task);
+     				}
+     				cmbTask.setValue(cmbTask.getItemIds().iterator().next());
+
+     			} catch (SQLException e) {
+     				// TODO Auto-generated catch block
+     				e.printStackTrace();
+     			}
+            }
+        });
+
+        loginLayout.addComponent(cmbUser, "left: 800px; top: 200px;");
+        loginLayout.addComponent(cmbTask, "left: 800px; top: 300px;");
+        loginLayout.addComponent(btnLogin, "left: 900px; top: 400px;");
+
+        loginPanel.setContent(loginLayout);
+    	
+       	return loginPanel;
+
+
+        

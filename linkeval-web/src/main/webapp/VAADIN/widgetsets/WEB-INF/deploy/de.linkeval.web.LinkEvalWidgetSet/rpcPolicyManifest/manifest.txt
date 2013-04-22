@@ -1,0 +1,2 @@
+# Module de.linkeval.web.LinkEvalWidgetSet
+# RPC service class, partial path of RPC policy file

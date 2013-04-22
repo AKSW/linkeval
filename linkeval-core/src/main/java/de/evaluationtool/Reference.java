@@ -10,4 +10,9 @@ public class Reference
 {
 	@NonNull public Set<Link> links;
 	public String property;
+	public Reference(Set<Link> l,String p)
+	{
+		links=l;
+		property=p;
+	}
 }
