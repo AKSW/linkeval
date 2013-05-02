@@ -1,5 +1,8 @@
 package de.linkeval.web;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,8 +24,10 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.sparql.pfunction.library.container;
+import com.ibm.icu.impl.USerializedSet;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -38,7 +43,9 @@ import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
@@ -46,7 +53,9 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.ListSelect;
@@ -74,7 +83,7 @@ public class LinkEvalUi extends UI
 	
 	// Data structures declarations
 	List<LinkCandidate> infoList;
-	String UserId="",task="";
+	String userId="",userName="",task="";
 	
 	Panel displayedPanel;
     @Override
@@ -118,11 +127,7 @@ public class LinkEvalUi extends UI
             cmbUser.setItemCaption(pairs.getKey(),pairs.getValue().toString());
             it.remove(); // avoids a ConcurrentModificationException
         }
-        /*for (String user : users.) 
-        {
-        	cmbUser.addItem(user);
-        	cmbUser.setIt
-		}*/
+
         cmbUser.setValue(cmbUser.getItemIds().iterator().next());
         
         //Listeners
@@ -131,9 +136,10 @@ public class LinkEvalUi extends UI
         {
             public void buttonClick(ClickEvent event) 
             {
-            	UserId = String.valueOf(cmbUser.getValue());
+            	userId = String.valueOf(cmbUser.getValue()); //which is his Id in tabel as this combo box shows names as captions and Ids as values
+            	userName=cmbUser.getItemCaption(userId);
                 task = String.valueOf(cmbTask.getValue());
-                if(task != "" && UserId != "" )
+                if(task != "" && userId != "" )
                 {
 	            	VerticalSplitPanel vsplit = new VerticalSplitPanel();
 	            	displayedPanel=designMainPanel();
@@ -143,25 +149,35 @@ public class LinkEvalUi extends UI
                 }
             }
         });
-        
+        cmbUser.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focus(FocusEvent event) {
+				// TODO Auto-generated method stub
+				cmbUser.setValue(cmbUser.getItemIds().iterator().next());
+			}
+		});
         cmbUser.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(final ValueChangeEvent event) 
             {
                 final String valueString = String.valueOf(event.getProperty().getValue());
-         
+                
                 try {
      				List<String>  tasks= getTasksInfo("jdbc:mysql://localhost:3306/","linkeval","root","mofo",valueString);
+     				
      				cmbTask.removeAllItems();
-     				for (String task : tasks) 
+     				if(tasks != null)
      				{
-     					cmbTask.addItem(task);
-     				}
-     				cmbTask.setValue(cmbTask.getItemIds().iterator().next());
-
+	     				for (String task : tasks) 
+	     				{
+	     					cmbTask.addItem(task);
+	     				}
+	     				cmbTask.setValue(cmbTask.getItemIds().iterator().next());
+     				}	
      			} catch (SQLException e) {
      				// TODO Auto-generated catch block
-     				e.printStackTrace();
+     				Notification.show(e.getMessage()) ;
      			}
             }
         });
@@ -203,10 +219,11 @@ public class LinkEvalUi extends UI
      	tblSourceDestination.setSelectable(true);     	
     	tblSourceDestination.setWidth("90%");    	
     	//fill the Source and Destination URIs table
-    	SQLContainer container=connectToDB("root", "mofo","Links");
-    	Notification.show(task);
+    	SQLContainer container=connectToDB("root", "mofo",userName);
+    	Notification.show("Welcome "+userName+" you loaded task Nr.: "+task);
     	Compare.Equal suburbFilter = new Compare.Equal("taskId",Integer.valueOf(task));
     	container.addContainerFilter(suburbFilter);
+    	//Fill the main (tblSourceDestination) table with resources
     	tblSourceDestination.setContainerDataSource(container);
     	tblSourceDestinationparam=tblSourceDestination;
     	
@@ -281,6 +298,69 @@ public class LinkEvalUi extends UI
     	
      	return linksDetails;
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    private boolean checkIfCached(int taskid)
+    {
+    	return true;
+    }
+    private void cachingForTriples(Table table, String endpoint)
+    {
+    	Model model = ModelFactory.createDefaultModel();
+    	List<String> resources=null;
+    	FileWriter fstream=null;
+		try {
+			fstream = new FileWriter("/home/mofeed/TrialStart/zicozico.nt");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		BufferedWriter out = new BufferedWriter(fstream);
+    	try
+    	{
+	    	for (Object id : table.getItemIds()) 
+	    	{
+	    		Item item = table.getItem(id);
+	    		Property sourceURI = item.getItemProperty("sourceURI");
+	    		Resource resource = model.createResource();
+	    		try
+	        	{
+	            	String sparqlQuery="select distinct * where { <"+sourceURI.getValue()+"> ?p  ?o .}";
+	    	        Query query = QueryFactory.create(sparqlQuery);
+	    			QueryExecution qexec = QueryExecutionFactory.sparqlService(endpoint, query);
+	    			com.hp.hpl.jena.query.ResultSet results = qexec.execSelect();
+	    			com.hp.hpl.jena.query.QuerySolution binding=null;
+	    		    while (results.hasNext()) 
+	    		    {
+	    		    	binding = results.next();
+	    		    	String property=binding.getResource("?p").toString();
+	    		    	String value;
+	    		    	if(binding.get("?o").isResource())
+	    		    		value=binding.getResource("?o").toString();
+	    		    	else
+	    		    		value=binding.getLiteral("?o").toString();
+	    		    	com.hp.hpl.jena.rdf.model.Property pt = ResourceFactory.createProperty(property);
+	    		    	//resource.addProperty(pt, value);
+	    		    	model.add(resource, pt, value);
+	    		    }
+	    		    qexec.close() ;
+	    		    model.write(out, null, "TURTLE");
+	        	}
+	        	catch (Exception e)
+	    	 	  {
+	    		        Notification.show(e.toString());
+	    	 	  }
+	    		//model.add(s, p, o);
+	    		//Property destinationURI = item.getItemProperty("destinationURI");
+   			   // out.write(sourceURI.getValue()+"\n");
+			}
+	    	/*out.flush();
+	    	fstream.flush();*/
+	    	out.close();
+    	}catch (Exception e){//Catch exception if any
+			  System.err.println("Error: " + e.getMessage());
+			  }
+    }
+    
     /////////////////////////////////////////////////////////////////////////////////////////////
     private SQLContainer connectToDB(String userName, String passWord, String table)
     {
@@ -363,7 +443,10 @@ public class LinkEvalUi extends UI
     	
     	final NativeSelect cmbSourceEndpoint= new NativeSelect("Source Endpoint");
     	final NativeSelect cmbDestinationEndpoint= new NativeSelect("Destination Endpoint");
-    	final ListSelect lstSuggestedProperties = new ListSelect("Suggested Properties");
+    	final ListSelect lstSuggestedProperties = new ListSelect("Lookup Properties");
+    	// to load properties of loaded resources automatically
+    	final CheckBox chkAutomaticPropertiesLoad = new CheckBox("Automatic Properties loading (next time)");
+    	chkAutomaticPropertiesLoad.setValue(false);
     	
     	cmbSourceEndpoint.setNullSelectionAllowed(false);
     	cmbDestinationEndpoint.setNullSelectionAllowed(false);
@@ -393,7 +476,7 @@ public class LinkEvalUi extends UI
     	tblDestinationPropertiesMapping.setMultiSelect(true);
     	///get data for comboboxes
     	SQLContainer cmbContainer= connectToDB("root", "mofo","Endpoints");
-
+    	//fill endpoints
 		cmbSourceEndpoint.setContainerDataSource(cmbContainer);
     	cmbDestinationEndpoint.setContainerDataSource(cmbContainer);   	
     	
@@ -456,6 +539,23 @@ public class LinkEvalUi extends UI
         	                
         	                Notification loadURI= new Notification("");
         	                loadURI.show("Links' URIs are successfully loaded ");
+        	                if(chkAutomaticPropertiesLoad.getValue())// the automatic buton i schecked
+        	                {
+        	                	//load the properties automatically
+        	                	String sourceEndpoint="",destinationEndpoint="";
+        	                	sourceEndpoint=cmbSourceEndpoint.getItemCaption(cmbSourceEndpoint.getValue());
+        	                	destinationEndpoint=cmbDestinationEndpoint.getItemCaption(cmbDestinationEndpoint.getValue());
+        	                	try
+        	    	    	  	{
+        	                		String sparqlQuery=source.getValue();		        
+        	    		            getURIProperties(sparqlQuery,sourceEndpoint,tblSourcePropertiesMapping);
+        	    		            sparqlQuery=destination.getValue();		        
+        	    		            getURIProperties(sparqlQuery,destinationEndpoint,tblDestinationPropertiesMapping);
+        	    	    	  	}
+        	                	catch(Exception e){Notification.show("ERROR");}
+        	                	lStartTime= System.currentTimeMillis();
+        	                	//start time for next one
+        	                }
                     	}
                     	catch(Exception e)
                     	{
@@ -515,6 +615,24 @@ public class LinkEvalUi extends UI
         	                
         	                Notification loadURI= new Notification("");
         	                loadURI.show("Links' URIs are successfully loaded ");
+        	                
+        	                if(chkAutomaticPropertiesLoad.getValue())// the automatic buton i schecked
+        	                {
+        	                	//load the properties automatically
+        	                	String sourceEndpoint="",destinationEndpoint="";
+        	                	sourceEndpoint=cmbSourceEndpoint.getItemCaption(cmbSourceEndpoint.getValue());
+        	                	destinationEndpoint=cmbDestinationEndpoint.getItemCaption(cmbDestinationEndpoint.getValue());
+        	                	try
+        	    	    	  	{
+        	                		String sparqlQuery=source.getValue();		        
+        	    		            getURIProperties(sparqlQuery,sourceEndpoint,tblSourcePropertiesMapping);
+        	    		            sparqlQuery=destination.getValue();		        
+        	    		            getURIProperties(sparqlQuery,destinationEndpoint,tblDestinationPropertiesMapping);
+        	    	    	  	}
+        	                	catch(Exception e){Notification.show("ERROR Not Properties queried");}
+        	                	lStartTime= System.currentTimeMillis();
+        	                	//start time for next one
+        	                }
                     	}
                     	catch(Exception e)
                     	{
@@ -576,6 +694,23 @@ public class LinkEvalUi extends UI
         	                
         	                Notification loadURI= new Notification("");
         	                loadURI.show("Links' URIs are successfully loaded ");
+        	                if(chkAutomaticPropertiesLoad.getValue())// the automatic buton i schecked
+        	                {
+        	                	//load the properties automatically
+        	                	String sourceEndpoint="",destinationEndpoint="";
+        	                	sourceEndpoint=cmbSourceEndpoint.getItemCaption(cmbSourceEndpoint.getValue());
+        	                	destinationEndpoint=cmbDestinationEndpoint.getItemCaption(cmbDestinationEndpoint.getValue());
+        	                	try
+        	    	    	  	{
+        	                		String sparqlQuery=source.getValue();		        
+        	    		            getURIProperties(sparqlQuery,sourceEndpoint,tblSourcePropertiesMapping);
+        	    		            sparqlQuery=destination.getValue();		        
+        	    		            getURIProperties(sparqlQuery,destinationEndpoint,tblDestinationPropertiesMapping);
+        	    	    	  	}
+        	                	catch(Exception e){Notification.show("ERROR Not Properties queried");}
+        	                	lStartTime= System.currentTimeMillis();
+        	                	//start time for next one
+        	                }
                     	}
                     	catch(Exception e)
                     	{
@@ -583,44 +718,9 @@ public class LinkEvalUi extends UI
                     		error.show("You did not select an item in the links table");
                     	}
             		}
-            		
- 
-            		/*boolean Found= false;
-				    for (Iterator i = tblSourceDestination.getItemIds().iterator(); i.hasNext();) 
-				    {
-				    	if (Found)
-				    	{
-				    		Notification.show(tblSourceDestination.getValue().toString());
-				    		tblSourceDestination.setValue(i.next());
-				    		break;
-				    	}
-				        // Get the current item identifier, which is an integer.
-				        int iid = (Integer) i.next();
-				        String other=tblSourceDestination.getItem(iid).toString();
-				        String selectedItemId=tblSourceDestination.getValue().toString();
-
-				        if(other.equals(selectedItemId))   //if(other.equals(property))
-				        {
-				        	Found=true;				        	
-				        }
-				        if(tblSourceDestination.getValue().equals(i.next()))   //if(other.equals(property))
-				        {
-				        	Found=true;				        	
-				        }
-				    }*/
-
-            		/*Object finishedRowId =tblSourceDestination.getValue();
-            	int id=(int)finishedRowId;
-            	id++;
-            	tblSourceDestination.setValue(id);*/
-            		/*Property sourceProperty=tblSourceDestination.getContainerProperty(rowId,"sourceURI");
-            	String property=tblSourcePropertiesMapping.get;
-            	tblDestinationPropertiesMapping.setValue(Ids);*/
             	}
             	catch(Exception e){Notification.show(e.getMessage());}
-///////////////////////////////////
-            	
-				
+
              }
         });
     	btnGetProperties.addClickListener(new Button.ClickListener() 
@@ -631,6 +731,7 @@ public class LinkEvalUi extends UI
             	sourceEndpoint=cmbSourceEndpoint.getItemCaption(cmbSourceEndpoint.getValue());
             	destinationEndpoint=cmbDestinationEndpoint.getItemCaption(cmbDestinationEndpoint.getValue());
            		lStartTime= System.currentTimeMillis();
+
             	try
 	    	  	{
             		String sparqlQuery=source.getValue();		        
@@ -638,7 +739,8 @@ public class LinkEvalUi extends UI
 		            sparqlQuery=destination.getValue();		        
 		            getURIProperties(sparqlQuery,destinationEndpoint,tblDestinationPropertiesMapping);
 	    	  	}
-            	catch(Exception e){Notification.show("ERROR");}
+            	catch(Exception e){Notification.show("ERROR while sparqling the endpoint for resources' properties (Are they selected/loaded ?)");}
+            	//cachingForTriples(tblSourceDestination, sourceEndpoint);
             }
         });
     	
@@ -666,9 +768,6 @@ public class LinkEvalUi extends UI
                 tblSourcePropertiesMapping.setImmediate(true);
                 tblSourcePropertiesMapping.setValue(Ids);
 				tblDestinationPropertiesMapping.setCurrentPageFirstItemId(first);
-				
-/*				Compare.Equal suburbFilter = new Compare.Equal("taskId",Integer.valueOf(task));
-		    	container.addContainerFilter(suburbFilter);*/
             }
         });
 
@@ -714,7 +813,7 @@ public class LinkEvalUi extends UI
 				    }
 				}
 				if(!Found)
-					Notification.show("Related property is not Found");
+					Notification.show("Related property is not Found in destination table try manual search");
 				else
 				{
 					Notification.show("Found in destination table");
@@ -729,6 +828,8 @@ public class LinkEvalUi extends UI
     	layout.addComponent(btnIncorrect, "left: "+(leftStart+space)+"px; top: "+(topStart+450)+"px;");
     	layout.addComponent(btnUnsure, "left: "+(leftStart+2*space)+"px; top: "+(topStart+450)+"px;"); 
     	layout.addComponent(btnGetProperties, "left: "+(leftStart+3*space+50)+"px; top: "+(topStart+450)+"px;");
+    	layout.addComponent(chkAutomaticPropertiesLoad, "left: "+(leftStart+3*space+250)+"px; top: "+(topStart+450)+"px;");
+
     	/*layout.addComponent(sourceURI,"left: "+(leftStart-space/2)+"px; top: "+(topStart+space/2)+"px;");
     	layout.addComponent(destinationURI,"left: "+(leftStart+2*space)+"px; top: "+(topStart+space/2)+"px;");*/
     	
@@ -754,9 +855,6 @@ public class LinkEvalUi extends UI
     {
     	Connection con = null;
 		String url = "jdbc:mysql://localhost:3306/";
-		/*String selectQuery="select property from Properties where Id in " +
-      			"(select secondProperty from propertyMappings where firstProperty = " +
-      			"(select Id from Properties Where property =\""+property+"\"))";       */ 
 		String selectQuery= "select property from Properties where " +
 				"(Id in (select firstProperty from propertyMappings " +
 						"where secondProperty = (select Id from Properties Where property =\""+property+"\")))" +
@@ -786,7 +884,7 @@ public class LinkEvalUi extends UI
   		 
 		  catch (SQLException s)
 		  {
-			  Notification.show("SQL statement is not executed!\n"+s.getMessage());
+			  Notification.show("SQL statement is not executed! In getting related properties\n"+s.getMessage());
 		  }
 		  finally
 		  {
@@ -834,25 +932,35 @@ public class LinkEvalUi extends UI
 	{
     	Connection con = null;
 		String driver = "com.mysql.jdbc.Driver";
-		List<String> info=new ArrayList<String>();
+		List<String> info=null;
 		  try
-		  {
+		  { 
 			  Class.forName(driver);
 			  con = DriverManager.getConnection(url+db,userName,password);
-			  String selectStatement="SELECT Tasks.taskId FROM Users, Tasks WHERE  Users.userId=Tasks.userId AND Tasks.userId = "+usr;
+			  String selectStatement="SELECT TasksUsers.taskId FROM TasksUsers WHERE  TasksUsers.userId = "+usr;
 			  Statement st = con.createStatement();
-			  ResultSet linksRecords=st.executeQuery(selectStatement);
-			  
-			  while(linksRecords.next())
+			  ResultSet linksRecords=null;
+			  linksRecords=st.executeQuery(selectStatement);
+			  if(linksRecords!=null)
 			  {
-				  info.add(linksRecords.getString("taskId"));
+				  info=new ArrayList<String>();
+				  while(linksRecords.next())
+				  {
+					  info.add(linksRecords.getString("taskId"));
+				  }
 			  }
+			  else
+			  {
+				  Notification.show("Warning:","User has no tasks", Type.TRAY_NOTIFICATION);
+			  }
+
 			  linksRecords.close();
 		  }
 		 
 		  catch (SQLException s)
 		  {
-			  Notification.show("SQLException:", "SQL statement is not executed!\n"+s.getMessage(), Type.TRAY_NOTIFICATION);
+			  
+			  Notification.show("SQLException:", "Error occured while Login:\n"+s.getMessage(), Type.TRAY_NOTIFICATION);
 		  } catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -872,41 +980,6 @@ public class LinkEvalUi extends UI
     //////////////////////////////////////////////////////////////////////////////////
     private HashMap<String, String> getLoginInfo(String url,String db,String userName,String password) throws SQLException
 	{
-    	/*Connection con = null;
-		String driver = "com.mysql.jdbc.Driver";
-		List<String> info=new ArrayList<String>();
-		  try
-		  {
-			  Class.forName(driver);
-			  con = DriverManager.getConnection(url+db,userName,password);
-			  String selectStatement="SELECT userId FROM Users";
-			  Statement st = con.createStatement();
-			  ResultSet linksRecords=st.executeQuery(selectStatement);
-			  
-			  while(linksRecords.next())
-			  {
-				  info.add(linksRecords.getString("userId"));
-			  }
-			  linksRecords.close();
-		  }
-		 
-		  catch (SQLException s)
-		  {
-			  //System.out.println("SQL statement is not executed!\n"+s.getMessage());
-		  } catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		  finally
-		  {
-			  try {
-				con.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		  }
-		return info;*/
     	Connection con = null;
 		String driver = "com.mysql.jdbc.Driver";
 		HashMap<String, String> info=new HashMap<String, String>();
