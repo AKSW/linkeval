@@ -7,7 +7,7 @@
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>linkeval-web</artifactId>
-
+	<packaging>war</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<vaadin.version>7.0.3</vaadin.version>
