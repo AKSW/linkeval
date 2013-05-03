@@ -1,6 +1,7 @@
 package de.evaluationtool;
 
 import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -10,9 +11,10 @@ public class Reference
 {
 	@NonNull public Set<Link> links;
 	public String property;
-	public Reference(Set<Link> l,String p)
+
+	/*public Reference(Set<Link> l,String p)
 	{
 		links=l;
 		property=p;
-	}
+	}*/
 }

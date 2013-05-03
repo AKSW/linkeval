@@ -3,20 +3,16 @@ package de.linkeval.web;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.sql.*;
-
-import javax.swing.plaf.SplitPaneUI;
-
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -26,50 +22,33 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.sparql.pfunction.library.container;
-import com.ibm.icu.impl.USerializedSet;
-import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.data.Property.ReadOnlyException;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.filter.Compare;
-import com.vaadin.data.util.sqlcontainer.RowItem;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
-//import com.mysql.jdbc.Connection;
-import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
 import com.vaadin.data.util.sqlcontainer.query.TableQuery;
+import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Link;
 import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.Window;
-import com.vaadin.data.util.filter.SimpleStringFilter;
 /*import de.steinwedel.messagebox.ButtonId;
 import de.steinwedel.messagebox.Icon;
 import de.steinwedel.messagebox.MessageBox;
@@ -134,7 +113,8 @@ public class LinkEvalUi extends UI
 
         btnLogin.addClickListener(new Button.ClickListener() 
         {
-            public void buttonClick(ClickEvent event) 
+            @Override
+			public void buttonClick(ClickEvent event) 
             {
             	userId = String.valueOf(cmbUser.getValue()); //which is his Id in tabel as this combo box shows names as captions and Ids as values
             	userName=cmbUser.getItemCaption(userId);
@@ -238,7 +218,8 @@ public class LinkEvalUi extends UI
     	
     	btnLoad.addClickListener(new Button.ClickListener() 
         {
-            public void buttonClick(ClickEvent event) 
+            @Override
+			public void buttonClick(ClickEvent event) 
             {
            		//lStartTime= System.currentTimeMillis();
         
@@ -268,7 +249,8 @@ public class LinkEvalUi extends UI
     	
     	tblSourceDestination.addItemClickListener(new ItemClickEvent.ItemClickListener() {
 
-            public void itemClick(ItemClickEvent event) 
+            @Override
+			public void itemClick(ItemClickEvent event) 
             {
             	/*lStartTime= System.currentTimeMillis();
                 
@@ -320,7 +302,7 @@ public class LinkEvalUi extends UI
 	    	for (Object id : table.getItemIds()) 
 	    	{
 	    		Item item = table.getItem(id);
-	    		Property sourceURI = item.getItemProperty("sourceURI");
+	    		Property sourceURI = item.getItemProperty("sourceURI");//vaadin property not jena
 	    		Resource resource = model.createResource();
 	    		try
 	        	{
@@ -497,7 +479,8 @@ public class LinkEvalUi extends UI
 
     	btnCorrect.addClickListener(new Button.ClickListener() 
         {
-            public void buttonClick(ClickEvent event) 
+            @Override
+			public void buttonClick(ClickEvent event) 
             {
             	try
             	{
@@ -574,7 +557,8 @@ public class LinkEvalUi extends UI
         });
     	btnIncorrect.addClickListener(new Button.ClickListener() 
         {
-            public void buttonClick(ClickEvent event) 
+            @Override
+			public void buttonClick(ClickEvent event) 
             {
             	try
             	{
@@ -650,7 +634,8 @@ public class LinkEvalUi extends UI
         });
     	btnUnsure.addClickListener(new Button.ClickListener() 
         {
-            public void buttonClick(ClickEvent event) 
+            @Override
+			public void buttonClick(ClickEvent event) 
             {
             	try
             	{
@@ -725,7 +710,8 @@ public class LinkEvalUi extends UI
         });
     	btnGetProperties.addClickListener(new Button.ClickListener() 
         {
-            public void buttonClick(ClickEvent event) 
+            @Override
+			public void buttonClick(ClickEvent event) 
             {
             	String sourceEndpoint="",destinationEndpoint="";
             	sourceEndpoint=cmbSourceEndpoint.getItemCaption(cmbSourceEndpoint.getValue());
@@ -777,7 +763,8 @@ public class LinkEvalUi extends UI
     	
     	tblSourcePropertiesMapping.addItemClickListener(new ItemClickEvent.ItemClickListener() {
 
-            public void itemClick(ItemClickEvent event) 
+            @Override
+			public void itemClick(ItemClickEvent event) 
             {
             	String property=tblSourcePropertiesMapping.getContainerProperty(event.getItemId(), event.getPropertyId()).toString();
                 List<String> res= getRelatedProperties(property);
