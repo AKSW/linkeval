@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 # The Link Evaluation Tool (linkeval)
 
 ## Execute
@@ -162,11 +160,3 @@ The table below shows the structure of the name source file. There are four colu
  [7]: http://www.gnu.org/software/coreutils/
  [8]: http://gnuwin32.sourceforge.net/packages/coreutils.htm
  [9]: http://saxon.sourceforge.net/
-=======
-LinksEvaluationTool
-===================
->>>>>>> 5e89ddb1818caadc18bec8d0c6816df8fbf41c10
-=======
-LinksEvaluationTool2013
-=======================
->>>>>>> a46825aa8be9aa8a8eb50ad33742a749f2d7d518
