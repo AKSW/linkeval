@@ -1,15 +1,12 @@
 # The Link Evaluation Tool (linkeval)
 
 ## Execute
-Clone the repository and then run
-
-    mvn --projects linkeval-web install
-    cd linkeval-web
-    mvn jetty:run
-
-Open the following url in a browser
-
-    localhost:8080
+    
+    git clone https://github.com/AKSW/linkeval
+    cd linkeval
+    mvn install
+    cd linkeval-desktop
+    mvn exec:java
 
 ## A Java Program for Evaluating Semantic Web Links
 
