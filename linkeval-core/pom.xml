@@ -9,19 +9,7 @@
   <name>linkeval core</name>
   <description>common methods used by both linkeval-desktop and linkeval-web</description>
 
-<!--  <build>
- <testSourceDirectory>src/test/java</testSourceDirectory>
-   <resources>
-    <resource>
-      <directory>src/main/java</directory>
-    </resource>    	
-		<resource>
-		 <directory>src/main/resources</directory>
-		 <filtering>false</filtering>
-		</resource>		
-  </resources>
-  <defaultGoal>compile</defaultGoal>
-  
+  <build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -29,15 +17,8 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>		        
-				</configuration>
-				     <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>				
+				</configuration>		
 			</plugin>
 		</plugins>
-	</build>-->
+	</build>
 </project>

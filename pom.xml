@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">	
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<artifactId>linkeval-parent</artifactId>
 	<groupId>de.linkeval</groupId>
 	<packaging>pom</packaging>
 	<version>0.1-SNAPSHOT</version>
-	
+
 	<name>Link Evaluation Tool</name>
 	<description>Link Evaluation Tool is a Java SWING and Vaadin Application that allows you to manually evaluate RDF interlinks. It can import links in ntriples and an xml alignment format.
 A (possibly outdated) documentation can be found at http://konradhoeffner.de/evaluationtool/index.html.</description>
@@ -15,22 +15,27 @@ A (possibly outdated) documentation can be found at http://konradhoeffner.de/eva
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+		<exec-maven-plugin.version>1.4.0</exec-maven-plugin.version>
 	</properties>
-	
-<repositories>
+
+	<repositories>
 		<repository>
 			<id>snapshot.maven.aksw</id>
 			<url>http://maven.aksw.org/archiva/repository/snapshots/</url>
 		</repository>
-		<repository> <id>projectlombok.org</id> <url>http://projectlombok.org/mavenrepo</url> </repository> 
+		<repository>
+			<id>projectlombok.org</id>
+			<url>http://projectlombok.org/mavenrepo</url>
+		</repository>
 		<repository>
 			<id>maven.aksw</id>
 			<url>http://maven.aksw.org/archiva/repository/internal/</url>
 		</repository>
 	</repositories>
 
-<dependencyManagement>
-<dependencies>
+	<dependencyManagement>
+		<dependencies>
 			<dependency>
 				<groupId>de.linkeval</groupId>
 				<artifactId>linkeval-core</artifactId>
@@ -47,52 +52,52 @@ A (possibly outdated) documentation can be found at http://konradhoeffner.de/eva
 				<version>${project.version}</version>
 			</dependency>
 
-</dependencies>
-</dependencyManagement>
+		</dependencies>
+	</dependencyManagement>
 
-  <dependencies>
-  
-  <dependency>
-      <groupId>org.aksw.commons</groupId>
-      <artifactId>collections</artifactId>
-      <version>0.4</version>
-    </dependency>
-    
-     <dependency>
-      <groupId>org.aksw.commons</groupId>
-      <artifactId>sparql</artifactId>
-      <version>0.4</version>
-    </dependency>
-    
-    
-     <dependency>
-      <groupId>org.aksw.commons</groupId>
-      <artifactId>util</artifactId>
-      <version>0.4</version>
-    </dependency>
-    
-    	<dependency>
+	<dependencies>
+
+		<dependency>
+			<groupId>org.aksw.commons</groupId>
+			<artifactId>collections</artifactId>
+			<version>0.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.aksw.commons</groupId>
+			<artifactId>sparql</artifactId>
+			<version>0.4</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.aksw.commons</groupId>
+			<artifactId>util</artifactId>
+			<version>0.4</version>
+		</dependency>
+
+		<dependency>
 			<groupId>alignapi</groupId>
 			<artifactId>alignapi</artifactId>
 			<version>4.1-precevaluator-excerpt</version>
 			<type>jar</type>
 		</dependency>
-		
-   <dependency>
-	<groupId>org.projectlombok</groupId>
-	<artifactId>lombok</artifactId>
-	<version>0.10.0</version>
-	<scope>provided</scope>
-	</dependency>
 
-  <dependency>
-      <groupId>uk.ac.shef.wit</groupId>
-      <artifactId>simmetrics</artifactId>
-      <version>1.6.2</version>
-    </dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.6</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.ac.shef.wit</groupId>
+			<artifactId>simmetrics</artifactId>
+			<version>1.6.2</version>
+		</dependency>
 
 
-	<dependency>
+		<dependency>
 			<groupId>com.hp.hpl.jena</groupId>
 			<artifactId>jena</artifactId>
 			<version>2.6.4</version>
@@ -104,22 +109,22 @@ A (possibly outdated) documentation can be found at http://konradhoeffner.de/eva
 		</dependency>
 
 		<dependency>
-  <groupId>com.javadocmd</groupId>
-  <artifactId>simplelatlng</artifactId>
-  <version>RELEASE</version>
-</dependency>
+			<groupId>com.javadocmd</groupId>
+			<artifactId>simplelatlng</artifactId>
+			<version>RELEASE</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom</artifactId>
 			<version>1.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>1.3.2</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>net.java.dev.glazedlists</groupId>
 			<artifactId>glazedlists_java15</artifactId>
@@ -145,51 +150,64 @@ A (possibly outdated) documentation can be found at http://konradhoeffner.de/eva
 			<artifactId>collections-generic</artifactId>
 			<version>4.01</version>
 		</dependency>
-		
-<!--		  <dependency>
-      <groupId>alignapi</groupId>
-      <artifactId>alignapi</artifactId>
-      <version>4.1-precevaluator-excerpt</version>
-    </dependency>-->		
+
+		<!-- <dependency> <groupId>alignapi</groupId> <artifactId>alignapi</artifactId> <version>4.1-precevaluator-excerpt</version> 
+			</dependency> -->
 	</dependencies>
 
 
-	
-<inceptionYear>2010</inceptionYear>
-<organization>
-	<name>AKSW/MOLE Group, Department of Computer Science, University of Leipzig</name>
-	<url>http://aksw.org/Groups/MOLE</url>
-</organization>
-	 <developers>
-	 <developer>
-      <id>konradhoeffner</id>
-      <name>Konrad Höffner</name>
-      <email>konrad.hoeffner@uni-leipzig.de</email>
-      <timezone>0</timezone>
-    </developer>	 
-	 </developers>
-	 <modules>
-	 	<module>linkeval-core</module>
-	 	<module>linkeval-desktop</module>
-	 	<module>linkeval-web</module>
-	 </modules>
-	
-	<build> 
-	 	<plugins>
+
+	<inceptionYear>2010</inceptionYear>
+	<organization>
+		<name>AKSW/MOLE Group, Department of Computer Science, University of Leipzig</name>
+		<url>http://aksw.org/Groups/MOLE</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>konradhoeffner</id>
+			<name>Konrad Höffner</name>
+			<email>konrad.hoeffner@uni-leipzig.de</email>
+			<timezone>0</timezone>
+		</developer>
+	</developers>
+	<modules>
+		<module>linkeval-core</module>
+		<module>linkeval-desktop</module>
+		<module>linkeval-web</module>
+	</modules>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<groupId>org.codehaus.mojo</groupId>
+					<version>${maven-compiler-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>exec-maven-plugin</artifactId>
+					<groupId>org.codehaus.mojo</groupId>
+					<version>${exec-maven-plugin.version}</version>
+				</plugin>				
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+
 				<configuration>
 					<source>1.7</source>
-					<target>1.7</target>		        
+					<target>1.7</target>
 				</configuration>
-				     <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>				
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

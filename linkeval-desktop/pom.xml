@@ -12,5 +12,18 @@
             <groupId>de.linkeval</groupId>
             <artifactId>linkeval-core</artifactId>
         </dependency>
-  </dependencies>            
+  </dependencies>
+  
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>de.evaluationtool.gui.EvaluationTool</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+            
 </project>
